@@ -6,7 +6,11 @@ generic
 	type T_Identifiant is private;
 package Arbre_Binaire is
 
+<<<<<<< HEAD
         package Pile_ABR is
+=======
+        package Pile_ABR is
+>>>>>>> 20d0148d6cdc8515c8619231fe612b325bedba62
         new Pile ( T_Element => T_Identifiant);
         type T_Abr is limited private;
 
