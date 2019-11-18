@@ -19,8 +19,7 @@ package Arbre_Binaire is
 
         -- Ajouter un noeud
         -- Exception : Identifiant_Present_Exception si L'identifiant est déjà présent dans l'arbre.
-        procedure Ajouter(Abr : in out T_Arbre_Binaire;ID : in T_Identifiant; Donnee : in T_Donnee) with
-            Post => La_Donnee(Abr,ID) = Donnee;
+        procedure Ajouter(Abr : in out T_Arbre_Binaire;ID : in T_Identifiant);
 
         -- Donner le nombre de successeurs d'un noeud
         -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
