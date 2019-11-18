@@ -32,7 +32,7 @@ package Arbre_Genealogique is
    type T_Personne_Enregistree is private;
 
    -- Instancie le package Arbre_Binaire avec des personnes enregistrées.
-   package Arbre is new Arbre_Binaire (T_Personne_Enregistree);
+   package Arbre is new Arbre_Binaire (T_Personne_Enregistree,);
 
    -- Enregistre une personne en lui attribuant une clé.
    function Enregistrer (Personne : T_Personne) return T_Personne_Enregistree;
