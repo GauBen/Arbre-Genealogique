@@ -7,7 +7,7 @@ generic
 	type T_Donnee
 package Arbre_Binaire is
 
-        package Pile_ABR is 
+        package Pile_ABR is
         new Pile ( T_Element => T_Identifiant);
         type T_Abr is limited private;
 
@@ -17,12 +17,12 @@ package Arbre_Binaire is
         -- Initisalier un ABR abr. L'ABR est vide.
         procedure Initialiser (Abr : out T_ABR) with
             Post => Est_Vide(Abr);
-        
-        -- Ajouter un noeud 
+
+        -- Ajouter un noeud
         -- Exception : Identifiant_Present_Exception si L'identifiant est déjà présent dans l'arbre.
         procedure Ajouter(Abr : in out T_Abr;ID : in T_Identifiant; Donnee : in T_Donnee) with
             Post => La_Donnee(Abr,ID) = Donnee;
-        
+
         -- Donner le nombre de successeurs d'un noeud
         -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
         function Nombre_de_successeurs(Abr : in T_Abr; ID : in T_Identifiant) return Integer;
@@ -47,7 +47,7 @@ private
 
 	type T_Noeud;
 	type T_Abr is access T_Noeud;
-	type T_Noeud is 
+	type T_Noeud is
 	    record
 
 		ID : T_Identifiant;
@@ -58,6 +58,3 @@ private
 
 
 end Arbre_Binaire;
-
-        
-
