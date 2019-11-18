@@ -6,15 +6,7 @@ generic
 	type T_Identifiant is private;
 package Arbre_Binaire is
 
-<<<<<<< HEAD
-        package Pile_Arbre_Binaire is 
-=======
-<<<<<<< HEAD
-        package Pile_ABR is
-=======
-        package Pile_ABR is
->>>>>>> 20d0148d6cdc8515c8619231fe612b325bedba62
->>>>>>> 317982331639a4274d5b08d9444ece010fac3b8b
+        package Pile_Arbre_Binaire is
         new Pile ( T_Element => T_Identifiant);
         type T_Abr is limited private;
 
@@ -53,13 +45,8 @@ package Arbre_Binaire is
 private
 
 	type T_Noeud;
-<<<<<<< HEAD
 	type T_Arbre_Binaire is access T_Noeud;
-	type T_Noeud is 
-=======
-	type T_Abr is access T_Noeud;
 	type T_Noeud is
->>>>>>> 317982331639a4274d5b08d9444ece010fac3b8b
 	    record
 
 		ID : T_Identifiant;
