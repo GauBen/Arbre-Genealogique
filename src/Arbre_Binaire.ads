@@ -51,7 +51,6 @@ private
 	    record
 
 		ID : T_Identifiant;
-		Donnee : T_Donnee;
 		Sous_Arbre_Gauche : T_Abr;
 		Sous_Arbre_Droit : T_Abr;
 	    end record
