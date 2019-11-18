@@ -4,7 +4,6 @@ with Pile
 
 generic
 	type T_Identifiant is private;
-	type T_Donnee
 package Arbre_Binaire is
 
         package Pile_ABR is
