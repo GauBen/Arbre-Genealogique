@@ -1,0 +1,34 @@
+R0 : Programme permettant de manipuler des arbres généalogiques associés à 
+un registre d'état civil 
+
+	R1 : Répéter
+		Selectionner une fonctionnalité   (out Choix_fonctionnalite)
+		Effectuer la fonctionnalité souhaitée(in Choix_fonctionnalité)
+		Demander à l'utilisateur s'il veut continuer (out Choix)
+	     Jusqu'à choix = non 	 	 (in Choix_Continuer)
+
+	     R2 : Comment " Selectionner une fonctionnalité " :
+		
+	     	Afficher les Différentes fonctionnalités
+		Lire(Choix_Fonctionnalite)
+		TantQue Choix_Fonctionnalite n'appartient pas à Liste_Choix
+			Ecrire("Choix incorrect")
+			Afficher les Différentes fonctionnalités
+			Lire(Choix_Fonctionnalités
+		Fin TantQue (Out Choix_Fonctionnalite)
+
+	     R2 : Comment " Effectuer la fonctionnalité souhaitée " : (in Choix_Fonctionnalite)
+	     	Selon Choix_Fonctionnalite : 
+			Quand Un choix => Lancer Sous Programme permettant d'utiliser la fonctionnalité ( voir raffinages_lancement_sous_programme)
+		Fin Selon;
+
+	     R2 : Comment "Demander à l'utilisateur s'il veut continuer" : 
+
+	     	Ecrire( "Voulez vous continuer ? (o/n) ")
+		Lire(Choix_Continuer)
+		TantQue Choix_Continuer /= 'o' ou Choix_Continuer /= 'n'
+			Ecrire("Choix Incorrect")
+			Ecrire("Voulez vous continuer ? (o/n)")
+			Lire(Choix_Continuer)
+		Fin TantQue	(out Choix_Continuer)
+
