@@ -37,3 +37,7 @@ Fonctionnalités proposées en R2 :
 Pour toutes ces fonctions, implémenter une fonction Filtrer
 de signature (arbre, f) -> pile, où f est une fonction de
 signature (noeud) -> bool.
+
+R3 : Comment "Savoir si deux personnes ont un ancêtre homonyme"
+Faire une liste des noms des ancêtres d'un individu donné
+Filtrer les ancêtres de l'autre individu sur le critère nom dans liste des noms
