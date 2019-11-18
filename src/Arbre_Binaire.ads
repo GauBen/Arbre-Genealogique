@@ -14,12 +14,11 @@ package Arbre_Binaire is
         Identifiant_Absent_Exception : Exception;
 
         -- Initisalier un Arbre Binaire abr. L'Arbre Binaire est vide.
-        procedure Initialiser (Abr : out T_Arbre_Binaire) with
-            Post => Est_Vide(Abr);
+        procedure Initialiser (Abr : out T_Arbre_Binaire;ID : in T_Identifiant)
 
         -- Ajouter un noeud
         -- Exception : Identifiant_Present_Exception si L'identifiant est déjà présent dans l'arbre.
-        procedure Ajouter(Abr : in out T_Arbre_Binaire;ID : in T_Identifiant);
+        procedure Ajouter(Abr : in out T_Arbre_Binaire;ID_racine : in T_Identifiant; ID_feuille : in T_Identifiant);
 
         -- Donner le nombre de successeurs d'un noeud
         -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
