@@ -1,0 +1,43 @@
+R0 : Programme permettant de manipuler des arbres généalogiques associés à
+un registre d'état civil
+
+R1 : Interface principale du programme
+	Répéter
+	| Selectionner une fonctionnalité              (out Choix_Fonctionnalite)
+	| Effectuer la fonctionnalité souhaitée        (in Choix_Fonctionnalite)
+	| Demander à l'utilisateur s'il veut continuer (out Choix_Continuer)
+	TantQue Choix_Continuer = oui 	 	           (in Choix_Continuer)
+
+R2 : Comment "Selectionner une fonctionnalité" (Out Choix_Fonctionnalite)
+Afficher les Différentes fonctionnalités
+Demander
+TantQue Choix_Fonctionnalite n'appartient pas à Liste_Choix
+| Afficher un message d'erreur
+| Redemander
+Fin TantQue
+
+R2 : Comment "Effectuer la fonctionnalité souhaitée" (in Choix_Fonctionnalite)
+Selon Choix_Fonctionnalite :
+| => Lancer le sous programme adéquat
+Fin Selon
+
+* * * * * *
+
+Fonctionnalités proposées en R2 :
+ * Créer une personne et l'ajouter au registre
+ * Modifier une personne dans le registre
+ * Créer l'arbre généalogique pour une personne du registre
+ * Ajouter un parent à n'importe quelle personne dans l'arbre
+ * Retirer une personne et tous ses ancêtres de l'arbre
+ * Afficher l'arbre à partir d'un noeud donné ou de la racine
+ * Savoir si deux personnes ont un ancêtre homonyme
+ * Afficher l'ensemble des personnes ayant {0, 1, 2} ancêtres connus
+ * Afficher l'ensemble des ancêtres situés à une génération N d'un noeud donné
+
+Pour toutes ces fonctions, implémenter une fonction Filtrer
+de signature (arbre, f) -> pile, où f est une fonction de
+signature (noeud) -> bool.
+
+R3 : Comment "Savoir si deux personnes ont un ancêtre homonyme"
+Faire une liste des noms des ancêtres d'un individu donné
+Filtrer les ancêtres de l'autre individu sur le critère nom dans liste des noms
