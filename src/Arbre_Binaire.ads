@@ -6,7 +6,15 @@ generic
 	type T_Identifiant is private;
 package Arbre_Binaire is
 
+<<<<<<< HEAD
         package Pile_Arbre_Binaire is 
+=======
+<<<<<<< HEAD
+        package Pile_ABR is
+=======
+        package Pile_ABR is
+>>>>>>> 20d0148d6cdc8515c8619231fe612b325bedba62
+>>>>>>> 317982331639a4274d5b08d9444ece010fac3b8b
         new Pile ( T_Element => T_Identifiant);
         type T_Abr is limited private;
 
@@ -16,12 +24,12 @@ package Arbre_Binaire is
         -- Initisalier un Arbre Binaire abr. L'Arbre Binaire est vide.
         procedure Initialiser (Abr : out T_Arbre_Binaire) with
             Post => Est_Vide(Abr);
-        
-        -- Ajouter un noeud 
+
+        -- Ajouter un noeud
         -- Exception : Identifiant_Present_Exception si L'identifiant est déjà présent dans l'arbre.
         procedure Ajouter(Abr : in out T_Arbre_Binaire;ID : in T_Identifiant; Donnee : in T_Donnee) with
             Post => La_Donnee(Abr,ID) = Donnee;
-        
+
         -- Donner le nombre de successeurs d'un noeud
         -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
         function Nombre_de_successeurs(Abr : in T_Arbre_Binaire; ID : in T_Identifiant) return Integer;
@@ -45,8 +53,13 @@ package Arbre_Binaire is
 private
 
 	type T_Noeud;
+<<<<<<< HEAD
 	type T_Arbre_Binaire is access T_Noeud;
 	type T_Noeud is 
+=======
+	type T_Abr is access T_Noeud;
+	type T_Noeud is
+>>>>>>> 317982331639a4274d5b08d9444ece010fac3b8b
 	    record
 
 		ID : T_Identifiant;
@@ -57,6 +70,3 @@ private
 
 
 end Arbre_Binaire;
-
-        
-
