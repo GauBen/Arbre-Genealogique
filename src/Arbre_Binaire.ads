@@ -2,10 +2,10 @@ with Ada.Text_Io; use Ada.Text_Io;
 with Pile;
 
 generic
-   type T_Cle is private;
+   type T_Identifiant is private;
 package Arbre_Binaire is
 
-   package Pile_De_Cles is new Pile (T_Cle);
+   package Pile_De_Cles is new Pile (T_Identifiant);
 
    type T_Arbre_Binaire is limited private;
 
@@ -72,19 +72,14 @@ package Arbre_Binaire is
         --              Arbre : in T_Arbre_Binaire L'arbre sur lequel nous voulons l'information
         --              N : in Integer  Le nombres de successeurs directs.
         -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre
-        function Id_Possedant_N_Successeurs_Directs(Abr : in T_Arbre_Binaire; N : in Integer) return T_Pile;
-
-   -- Renvoie l'ensemble des clés ayant N branches directes.
-   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
-   function Id_Possedant_N_Successeurs_Directs
-     (Abr : in T_Arbre_Binaire; Id : in T_Cle; N : in Integer) return T_Pile;
+        function Id_Possedant_N_Successeurs_Directs(Arbre : in T_Arbre_Binaire; N : in Integer) return T_Pile;
 
 private
 
    type T_Noeud;
    type T_Arbre_Binaire is access T_Noeud;
    type T_Noeud is record
-      Id                : T_Cle;
+      Id                : T_Identifiant;
       Sous_Arbre_Gauche : T_Arbre_Binaire;
       Sous_Arbre_Droit  : T_Arbre_Binaire;
    end record;
