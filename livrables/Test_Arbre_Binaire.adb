@@ -11,7 +11,7 @@ procedure Test_Arbre_Binaire is
    Arbre : T_Arbre_Binaire;
    begin
       Initialiser(Arbre,1);
-      pragma assert(Est_Vide(Arbre));
+      pragma assert(Nombre_De_Successeurs(Arbre,1)=0);
    end Test_Initialiser;
 
    procedure Test_Ajouter is
