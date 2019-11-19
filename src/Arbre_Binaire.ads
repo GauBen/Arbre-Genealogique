@@ -1,17 +1,13 @@
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Ada.Text_Io; use Ada.Text_Io;
 with Pile;
 
 generic
-	type T_Identifiant is private;
+   type T_Cle is private;
 package Arbre_Binaire is
 
-        package Pile_Arbre_Binaire is
-        new Pile ( T_Element => T_Identifiant);
-        type T_Abr is limited private;
+   package Pile_De_Cles is new Pile (T_Cle);
 
-        Identifiant_Present_Exception : Exception;
-        Identifiant_Absent_Exception : Exception;
+   type T_Arbre_Binaire is limited private;
 
         -- Initisalier un Arbre Binaire abr. L'Arbre Binaire est vide.
         -- Paramètres :
@@ -78,18 +74,19 @@ package Arbre_Binaire is
         -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre
         function Id_Possedant_N_Successeurs_Directs(Abr : in T_Arbre_Binaire; N : in Integer) return T_Pile;
 
+   -- Renvoie l'ensemble des clés ayant N branches directes.
+   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
+   function Id_Possedant_N_Successeurs_Directs
+     (Abr : in T_Arbre_Binaire; Id : in T_Cle; N : in Integer) return T_Pile;
+
 private
 
-	type T_Noeud;
-	type T_Arbre_Binaire is access T_Noeud;
-	type T_Noeud is
-	    record
-
-		ID : T_Identifiant;
-		Sous_Arbre_Gauche : T_Arbre_Binaire;
-		Sous_Arbre_Droit : T_Arbre_Binaire;
-	    end record
-
-
+   type T_Noeud;
+   type T_Arbre_Binaire is access T_Noeud;
+   type T_Noeud is record
+      Id                : T_Cle;
+      Sous_Arbre_Gauche : T_Arbre_Binaire;
+      Sous_Arbre_Droit  : T_Arbre_Binaire;
+   end record;
 
 end Arbre_Binaire;
