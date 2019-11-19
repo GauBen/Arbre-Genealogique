@@ -107,7 +107,7 @@ package Arbre_Binaire is
    --    Arbre_Binaire : in out T_Arbre_Binaire  L'arbre que nous voulons détruire.
    -- Assure :
    --    L'arbre est détruit.
-   procedure detruire
+   procedure Detruire
       (Arbre_Binaire : in out T_Arbre_Binaire);
 
 private

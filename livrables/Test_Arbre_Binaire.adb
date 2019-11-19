@@ -8,14 +8,14 @@ procedure Test_Arbre_Binaire is
    new Arbre_Binaire (T_Identifiant => Integer);
 
    procedure Test_Initialiser is
-   Arbre_Binaire : T_Arbre_Binaire;
+      Arbre_Binaire : T_Arbre_Binaire;
    begin
       Initialiser(Arbre_Binaire,1);
       pragma assert(Nombre_De_Successeurs(Arbre_Binaire,1)=0);
    end Test_Initialiser;
 
    procedure Test_Ajouter is
-   Arbre_Binaire : T_Arbre_Binaire;
+      Arbre_Binaire : T_Arbre_Binaire;
    begin
       Initialiser(Arbre_Binaire,1);
       Ajouter(Arbre_Binaire, 1,2);
@@ -24,7 +24,7 @@ procedure Test_Arbre_Binaire is
    end Test_Ajouter;
 
    procedure Test_Nombre_De_Successeurs is
-   Arbre_Binaire : T_Arbre_Binaire;
+      Arbre_Binaire : T_Arbre_Binaire;
    begin
       Initialiser(Arbre_Binaire,1);
       Ajouter(Arbre_Binaire,1,2);
@@ -34,7 +34,7 @@ procedure Test_Arbre_Binaire is
    end Test_Nombre_De_Successeurs;
 
    procedure Test_Liste_Des_Successeurs is
-   Arbre_Binaire : T_Arbre_Binaire;
+      Arbre_Binaire : T_Arbre_Binaire;
    begin
       Initialiser(Arbre_Binaire,1);
       Ajouter(Arbre_Binaire,1,2);
@@ -43,7 +43,7 @@ procedure Test_Arbre_Binaire is
    end Test_Liste_Des_Successeurs;
 
    procedure Test_Supprimer_Sous_Arbre is
-   Arbre_Binaire : T_Arbre_Binaire;
+      Arbre_Binaire : T_Arbre_Binaire;
    begin
       Initialiser(Arbre_Binaire,1);
       Ajouter(Arbre_Binaire,1,2);
@@ -53,7 +53,7 @@ procedure Test_Arbre_Binaire is
    end Test_Supprimer_Sous_Arbre;
 
    procedure Test_Noeuds_Possedant_N_Successeurs_Directs is
-   Arbre_Binaire : T_Arbre_Binaire;
+      Arbre_Binaire : T_Arbre_Binaire;
    begin
       Initialiser(Arbre_Binaire,1);
       Ajouter(Arbre_Binaire,1,2);
