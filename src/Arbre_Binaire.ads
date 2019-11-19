@@ -93,6 +93,15 @@ package Arbre_Binaire is
    function Noeuds_Possedant_N_Successeurs_Directs
      (Arbre_Binaire : in T_Arbre_Binaire; Racine : in T_Cle; N : in Integer) return T_Pile;
 
+   -- Renvoie vrai si le noeud est présent dans l'arbre.
+   -- Paramètres :
+   --    Arbre_Binaire : in T_Arbre_Binaire  L'arbre sur lequel nous voulons l'information
+   --    Noeud         : in T_Cle            Le noeud que nous voulons vérifier
+   -- Assure :
+   --    Renvoie Vrai si le noeud est présent et renvoie faux sinon.
+   function Est_Present
+      (Arbre_Binaire : in T_Arbre_Binaire; Noeud : in T_Cle) return Boolean;
+
 private
 
    type T_Noeud;
