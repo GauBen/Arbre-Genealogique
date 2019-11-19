@@ -23,24 +23,24 @@ procedure Test_Arbre_Binaire is
       Detruire(Arbre);
    end Test_Ajouter;
 
-   procedure Test_Nombre_de_successeurs is
+   procedure Test_Nombre_De_Successeurs is
    Arbre : T_Arbre_Binaire;
    begin
       Initialiser(Arbre,1);
       Ajouter(Arbre,1,2);
       Ajouter(Arbre,1,3);
-      pragma assert(Nombre_de_successeurs(Arbre,1) = 2);
+      pragma assert(Nombre_De_Successeurs(Arbre,1) = 2);
       Detruire(Arbre);
-   end Test_Nombre_de_successeurs;
+   end Test_Nombre_De_Successeurs;
 
-   procedure Test_Obt_Id_Successeur is
+   procedure Test_Liste_Des_Successeurs is
    Arbre : T_Arbre_Binaire;
    begin
       Initialiser(Arbre,1);
       Ajouter(Arbre,1,2);
-      pragma assert(Obt_Id_Successeur(Arbre,1).all.Valeur = 2);
+      pragma assert(Liste_Des_Successeurs(Arbre,1).all.Valeur = 2);
       Detruire(Arbre);
-   end Test_Obt_Id_Successeur;
+   end Test_Liste_Des_Successeurs;
 
    procedure Test_Supprimer_Sous_Arbre is
    Arbre : T_Arbre_Binaire;
@@ -52,32 +52,32 @@ procedure Test_Arbre_Binaire is
       Detruire(Arbre);
    end Test_Supprimer_Sous_Arbre;
 
-   procedure Test_Id_Possedant_N_Successeurs_Directs is
+   procedure Test_Noeuds_Possedant_N_Successeurs_Directs is
    Arbre : T_Arbre_Binaire;
    begin
       Initialiser(Arbre,1);
       Ajouter(Arbre,1,2);
       Ajouter(Arbre,1,3);
       Ajouter(Arbre,2,4);
-      pragma assert(Id_Possedant_N_Successeurs_Directs(Arbre,0) = 2);
-      pragma assert(Id_Possedant_N_Successeurs_Directs(Arbre,1) = 1);
-      pragma assert(Id_Possedant_N_Successeurs_Directs(Arbre,2) = 2);
+      pragma assert(Noeuds_Possedant_N_Successeurs_Directs(Arbre,0) = 2);
+      pragma assert(Noeuds_Possedant_N_Successeurs_Directs(Arbre,1) = 1);
+      pragma assert(Noeuds_Possedant_N_Successeurs_Directs(Arbre,2) = 2);
       Detruire(Arbre);
-   end Test_Id_Possedant_N_Successeurs_Directs;
+   end Test_Noeuds_Possedant_N_Successeurs_Directs;
 
    begin
       Test_Initialiser;
       Put_Line("Initialiser vérifiée");
       Test_Ajouter;
       Put_Line("Ajouter vérifiée");
-      Test_Nombre_de_successeurs;
-      Put_Line("Nombre_de_successeurs vérifiée");
-      Test_Obt_Id_Successeur;
-      Put_Line("Obt_Id_Successeur vérifiée");
+      Test_Nombre_De_Successeurs;
+      Put_Line("Nombre_De_Successeurs vérifiée");
+      Test_Liste_Des_Successeur;
+      Put_Line("Liste_Des_Successeurs vérifiée");
       Test_Supprimer_Sous_Arbre;
       Put_Line("Supprimer_Sous_Arbre vérifiée");
-      Test_Id_Possedant_N_Successeurs_Directs;
-      Put_Line("Id_Possedant_N_Successeurs_Directs vérifiée");
+      Test_Noeuds_Possedant_N_Successeurs_Directs;
+      Put_Line("Noeuds_Possedant_N_Successeurs_Directs vérifiée");
       Put_Line("Module vérifié");
    end Test_Arbre_Binaire;
 
