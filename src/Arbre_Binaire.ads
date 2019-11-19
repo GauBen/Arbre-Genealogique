@@ -1,57 +1,62 @@
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Ada.Text_Io; use Ada.Text_Io;
 with Pile;
 
 generic
-	type T_Identifiant is private;
+   type T_Cle is private;
 package Arbre_Binaire is
 
-        package Pile_Arbre_Binaire is
-        new Pile ( T_Element => T_Identifiant);
-        type T_Abr is limited private;
+   package Pile_De_Cles is new Pile (T_Cle);
 
-        Identifiant_Present_Exception : Exception;
-        Identifiant_Absent_Exception : Exception;
+   type T_Arbre_Binaire is limited private;
 
-        -- Initisalier un Arbre Binaire abr. L'Arbre Binaire est vide.
-        procedure Initialiser (Abr : out T_Arbre_Binaire;ID : in T_Identifiant)
+   Cle_Presente_Exception : exception;
+   Cle_Absente_Exception  : exception;
 
-        -- Ajouter un noeud
-        -- Exception : Identifiant_Present_Exception si L'identifiant est déjà présent dans l'arbre.
-        procedure Ajouter(Abr : in out T_Arbre_Binaire;ID_racine : in T_Identifiant; ID_feuille : in T_Identifiant);
+   -- Initialise un arbre binaire Abr, dont la racine est étiquetée par clé.
+   procedure Initialiser (Arbre_Binaire : out T_Arbre_Binaire; Cle : in T_Cle);
 
-        -- Donner le nombre de successeurs d'un noeud
-        -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
-        function Nombre_de_successeurs(Abr : in T_Arbre_Binaire; ID : in T_Identifiant) return Integer;
+   -- Ajoute un noeud.
+   -- Exceptions :
+   --    Cle_Absente_Exception si le noeud parent n'est pas trouvé.
+   --    Cle_Presente_Exception si la feuille est déjà présente dans l'arbre.
+   procedure Ajouter
+     (Arbre_Binaire : in out T_Arbre_Binaire; Noeud : in T_Cle;
+      Feuille       : in     T_Cle);
 
-        -- Obtenir les Identifiants des successeur d'un noeud jusqu'à une certaine génération
-        -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
-        function  Obt_Id_Successeur (Abr : in T_Arbre_Binaire ; ID : in T_Identifiant ; Generation : in Integer) return T_Pile;
+   -- Renvoie le nombre de successeurs d'un noeud.
+   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
+   function Nombre_De_Successeurs
+     (Arbre_Binaire : in T_Arbre_Binaire; Noeud : in T_Cle) return Integer;
 
-        -- afficher l'arbre à partir d'un certain noeud
-        -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre.
-        procedure Afficher_Sous_Arbre(Abr : in T_Arbre_Binaire; ID : in T_Identifiant);
+   -- Renvoie les clés des successeur d'un noeud jusqu'à la génération donnée.
+   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
+   function Liste_Des_Successeurs
+     (Arbre_Binaire         : in T_Arbre_Binaire; Noeud : in T_Cle;
+      Nombre_De_Generations : in Integer) return T_Pile;
 
-        -- Supprimer un noeud et ses successeurs
-        --Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre
-        procedure Supprimer_Sous_Arbre(Abr : in T_Arbre_Binaire; ID : in T_Identifiant);
+   -- Affiche l'arbre à partir du noeud donné.
+   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
+   procedure Afficher_Sous_Arbre
+     (Arbre_Binaire : in T_Arbre_Binaire; Id : in T_Cle);
 
-        -- Obtenir l'ensemble des clés ayant n branches directes suivantes
-        -- Exception : Identifiant_Absent_Exception si l'identifiant n'est pas présent dans l'arbre
-        function Id_Possedant_N_Successeurs_Directs(Abr : in T_Arbre_Binaire; ID : in T_Identifiant; N : in Integer) return T_Pile;
+   -- Supprime un noeud et ses successeurs
+   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
+   procedure Supprimer_Sous_Arbre
+     (Arbre_Binaire : in T_Arbre_Binaire; Id : in T_Cle);
+
+   -- Renvoie l'ensemble des clés ayant N branches directes.
+   -- Exception : Cle_Absente_Exception si le noeud n'est pas présent dans l'arbre.
+   function Id_Possedant_N_Successeurs_Directs
+     (Abr : in T_Arbre_Binaire; Id : in T_Cle; N : in Integer) return T_Pile;
 
 private
 
-	type T_Noeud;
-	type T_Arbre_Binaire is access T_Noeud;
-	type T_Noeud is
-	    record
-
-		ID : T_Identifiant;
-		Sous_Arbre_Gauche : T_Arbre_Binaire;
-		Sous_Arbre_Droit : T_Arbre_Binaire;
-	    end record
-
-
+   type T_Noeud;
+   type T_Arbre_Binaire is access T_Noeud;
+   type T_Noeud is record
+      Id                : T_Cle;
+      Sous_Arbre_Gauche : T_Arbre_Binaire;
+      Sous_Arbre_Droit  : T_Arbre_Binaire;
+   end record;
 
 end Arbre_Binaire;
