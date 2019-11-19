@@ -102,6 +102,14 @@ package Arbre_Binaire is
    function Est_Present
       (Arbre_Binaire : in T_Arbre_Binaire; Noeud : in T_Cle) return Boolean;
 
+   -- Détruit un arbre binaire.
+   -- Paramètres :
+   --    Arbre_Binaire : in out T_Arbre_Binaire  L'arbre que nous voulons détruire.
+   -- Assure :
+   --    L'arbre est détruit.
+   procedure detruire
+      (Arbre_Binaire : in out T_Arbre_Binaire);
+
 private
 
    type T_Noeud;
