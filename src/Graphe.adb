@@ -20,6 +20,7 @@ package body Graphe is
       Put_Line ("TODO");
    end Detruire;
 
+   -- ? Exception lorsque le sommet existe déjà ?
    procedure Ajouter_Sommet
      (Graphe : in out T_Graphe; Etiquette : T_Etiquette_Sommet)
    is
