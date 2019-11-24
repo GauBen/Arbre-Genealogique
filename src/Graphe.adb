@@ -12,13 +12,12 @@ package body Graphe is
    procedure Initialiser (Graphe : out T_Graphe) is
    begin
       Graphe := null;
-      Put_Line ("Initialiser");
    end Initialiser;
 
    procedure Detruire (Graphe : in out T_Graphe) is
    begin
       Graphe := null;
-      Put_Line ("Detruire");
+      Put_Line ("TODO");
    end Detruire;
 
    procedure Ajouter_Sommet
@@ -26,10 +25,9 @@ package body Graphe is
    is
       Nouveau_Graphe : T_Graphe;
    begin
-      Nouveau_Graphe := new T_Sommet;
+      Nouveau_Graphe     := new T_Sommet;
       Nouveau_Graphe.all := (Etiquette, null, Graphe);
-      Graphe := Nouveau_Graphe;
-      Put_Line ("Ajouter sommet");
+      Graphe             := Nouveau_Graphe;
    end Ajouter_Sommet;
 
    function Trouver_Pointeur_Sommet
@@ -51,7 +49,7 @@ package body Graphe is
    is
       Pointeur_Origine     : T_Graphe;
       Pointeur_Destination : T_Graphe;
-      Nouvelle_Arete       : T_Pointeur_Arete;
+      Nouvelle_Arete       : T_Liste_Adjacence;
    begin
       Pointeur_Origine     := Trouver_Pointeur_Sommet (Graphe, Origine);
       Pointeur_Destination := Trouver_Pointeur_Sommet (Graphe, Destination);
@@ -61,8 +59,33 @@ package body Graphe is
         (Etiquette, Pointeur_Destination, Pointeur_Origine.all.Arete);
 
       Pointeur_Origine.all.Arete := Nouvelle_Arete;
-
-      Put_Line ("Ajouter arete");
    end Ajouter_Arete;
+
+   procedure Chaine_Adjacence
+     (Adjacence :    out T_Liste_Adjacence; Graphe : in T_Graphe;
+      Origine   : in     T_Etiquette_Sommet)
+   is
+   begin
+      Adjacence := Trouver_Pointeur_Sommet (Graphe, Origine).all.Arete;
+   end Chaine_Adjacence;
+
+   function Adjacence_Non_Vide
+     (Adjacence : T_Liste_Adjacence) return Boolean
+   is
+   begin
+      return Adjacence /= null;
+   end Adjacence_Non_Vide;
+
+   procedure Arete_Suivante
+     (Adjacence : in out T_Liste_Adjacence; Arete: out T_Arete_Etiquetee)
+   is
+   begin
+      if Adjacence = null then
+         raise Vide;
+      end if;
+      Arete :=
+        (Adjacence.all.Etiquette, Adjacence.all.Destination.all.Etiquette);
+      Adjacence := Adjacence.all.Suivante;
+   end Arete_Suivante;
 
 end Graphe;
