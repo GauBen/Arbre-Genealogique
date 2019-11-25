@@ -1,6 +1,6 @@
 with Ada.Text_Io; use Ada.Text_Io;
 with Ada.Unchecked_Deallocation;
--- procedure Free is new Ada.Unchecked_Deallocation (T_Cellule, T_Pointeur);
+--
 
 package body Graphe is
 
@@ -14,10 +14,24 @@ package body Graphe is
       Graphe := null;
    end Initialiser;
 
+   procedure Desallouer_Sommet is new Ada.Unchecked_Deallocation (T_Sommet, T_Graphe);
+   procedure Desallouer_Arete is new Ada.Unchecked_Deallocation (T_Arete, T_Liste_Adjacence);
+
+   procedure Detruire_Arete (Adjacence :in out T_Liste_Adjacence) is
+   begin
+      if Adjacence /= null then
+         Detruire_Arete (Adjacence.all.Suivante);
+      end if;
+      Desallouer_Arete (Adjacence);
+   end;
+
    procedure Detruire (Graphe : in out T_Graphe) is
    begin
-      Graphe := null;
-      Put_Line ("TODO");
+      if Graphe /= null then
+         Detruire_Arete (Graphe.all.Arete);
+         Detruire (Graphe.all.Suivant);
+      end if;
+      Desallouer_Sommet (Graphe);
    end Detruire;
 
    -- ? Exception lorsque le sommet existe déjà ?
