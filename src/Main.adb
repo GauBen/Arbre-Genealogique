@@ -6,10 +6,11 @@ procedure Main is
    type T_Menu is (Menu_A, Menu_B, Quitter);
 
    type T_Etat is record
-      Cle : Integer;
+      Cle  : Integer;
+      Menu : T_Menu;
    end record;
 
-   procedure Afficher_Menu_A (Etat : in out T_Etat; Menu : in out T_Menu) is
+   procedure Afficher_Menu_A (Etat : in out T_Etat) is
       Choix : Integer;
    begin
       Put_Line ("** Menu A **");
@@ -27,13 +28,13 @@ procedure Main is
          when 1 =>
             Etat.Cle := Etat.Cle + 1;
          when 2 =>
-            Menu := Menu_B;
+            Etat.Menu := Menu_B;
          when others =>
-            Menu := Quitter;
+            Etat.Menu := Quitter;
       end case;
    end Afficher_Menu_A;
 
-   procedure Afficher_Menu_B (Etat : in out T_Etat; Menu : in out T_Menu) is
+   procedure Afficher_Menu_B (Etat : in out T_Etat) is
       Choix : Integer;
    begin
       Put_Line ("** Menu B **");
@@ -51,32 +52,30 @@ procedure Main is
          when 1 =>
             Etat.Cle := Etat.Cle - 1;
          when 2 =>
-            Menu := Menu_A;
+            Etat.Menu := Menu_A;
          when others =>
-            Menu := Quitter;
+            Etat.Menu := Quitter;
       end case;
    end Afficher_Menu_B;
 
-   procedure Afficher_Menu (Etat : in out T_Etat; Menu : in out T_Menu) is
+   procedure Afficher_Menu (Etat : in out T_Etat) is
    begin
-      case Menu is
+      case Etat.Menu is
          when Menu_A =>
-            Afficher_Menu_A (Etat, Menu);
+            Afficher_Menu_A (Etat);
          when Menu_B =>
-            Afficher_Menu_B (Etat, Menu);
+            Afficher_Menu_B (Etat);
          when others =>
-            Menu := Quitter;
+            Etat.Menu := Quitter;
       end case;
    end Afficher_Menu;
 
-   Etat : T_Etat := (CLe => 0);
-
-   Menu : T_Menu := Menu_A;
+   Etat : T_Etat := (Cle => 0, Menu => Menu_A);
 
 begin
 
-   while Menu /= Quitter loop
-      Afficher_Menu (Etat, Menu);
+   while Etat.Menu /= Quitter loop
+      Afficher_Menu (Etat);
    end loop;
 
 end Main;
