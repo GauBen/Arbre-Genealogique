@@ -9,9 +9,13 @@ package Registre is
 
    Cle_Absente_Exception : exception;
 
+   -- Renvoie vrai si le registre est entièrement vide.
+   function Est_Vide (Registre : T_Registre) return Boolean;
+
    -- Initialiser un registre vide.
    procedure Initialiser (Registre : out T_Registre) with
       Post => Est_Vide (Registre);
+
 
    -- Renvoie vrai si la clé est presente dans le registre.
    function Existe (Registre : T_Registre; Cle : Integer) return Boolean;
@@ -23,7 +27,7 @@ package Registre is
    -- Renvoie un élément du registre.
    -- Lance Cle_Absente_Exception si la clé n'est pas trouvee.
    function Acceder
-     (Registre : T_Registre; Cle : Integer; Element : T_Element)
+     (Registre : T_Registre; Cle : Integer)
       return T_Element;
 
    -- Supprime un élément du registre.
@@ -31,7 +35,7 @@ package Registre is
 
    -- Supprime tous les éléments du registre.
    procedure Vider (Registre : in out T_Registre) with
-      Post => Est_Vide (Abr);
+      Post => Est_Vide (Registre);
 
 private
 
@@ -42,6 +46,7 @@ private
    type T_Pointeur_Sur_Maillon is access T_Maillon;
 
    type T_Maillon is record
+      Cle     : Integer;
       Element : T_Element;
       Suivant : T_Pointeur_Sur_Maillon;
    end record;
