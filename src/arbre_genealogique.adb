@@ -114,4 +114,9 @@ package body Arbre_Genealogique is
 		Supprimer_Arete(Arbre.Graphe,Personne_Destination,Relation,Personne_Origine);
 	end case;
    end Supprimer_Relation;
+
+   function Acceder_Personne(Arbre : in T_Arbre_genealogique, Cle : integer) is 
+   begin
+	   return Acceder(Arbre.Registre,Cle);
+   end Acceder_Personne;
 end Arbre_Genealogique;
