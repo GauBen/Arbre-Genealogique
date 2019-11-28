@@ -1,17 +1,16 @@
 with Ada.Strings.Bounded;
-
+with Date;
+use Date;
+with Registre;
 package Arbre_Genealogique is
 
    -- Documentation : https://en.wikibooks.org/wiki/Ada_Programming/Strings
    package Sb is new Ada.Strings.Bounded.Generic_Bounded_Length (Max => 1023);
 
+
    -- Diverses informations sur une personne.
    type T_Genre is (Masculin, Feminin, Autre, Non_Renseigne);
-   type T_Date is record
-      Annee : Integer;
-      Mois  : Integer;
-      Jour  : Integer;
-   end record;
+
    type T_Lieu is record
       Pays  : Sb.Bounded_String;
       Ville : Sb.Bounded_String;
@@ -31,8 +30,10 @@ package Arbre_Genealogique is
 
    type T_Personne_Enregistree is private;
 
+   package Registre is new Registre (100; T_Personne_Enregistree);
+
    -- Instancie le package Arbre_Binaire avec des personnes enregistrées.
-   package Arbre is new Arbre_Binaire (integer);
+   package Arbre_Genealogique1 is new Graphe (integer,(A_Pour_Parent));
 
    -- Enregistre une personne en lui attribuant une clé.
    function Enregistrer (Personne : T_Personne) return T_Personne_Enregistree;
