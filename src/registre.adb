@@ -110,11 +110,11 @@ package body Registre is
       Desallouer_Maillon(Pointeur);
    end Supprimer_Maillons;
 
-   procedure Vider (Registre : in out T_Registre) is begin
+   procedure Detruire (Registre : in out T_Registre) is begin
       for i in Registre'range loop
          Supprimer_Maillons(Registre(i));
       end loop;
-   end Vider;
+   end Detruire;
 
 
 end Registre;
