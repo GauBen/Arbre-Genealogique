@@ -213,8 +213,6 @@ Consulter une personne liée :
 Votre choix [0-4] :
 ```
 
-
-
 Ajouter une relation :
 
 ```console
@@ -271,5 +269,3 @@ Recherche avancée :
 ```console
 À voir
 ```
-
-
