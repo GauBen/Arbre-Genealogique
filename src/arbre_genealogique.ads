@@ -4,6 +4,8 @@ with Registre;
 
 package Arbre_Genealogique is
 
+   Relation_Existante : exception;
+
    -- Documentation : https://en.wikibooks.org/wiki/Ada_Programming/Strings
    package Sb is new Ada.Strings.Bounded.Generic_Bounded_Length (Max => 1023);
 
@@ -20,6 +22,13 @@ package Arbre_Genealogique is
 
    type T_Arbre_Genealogique is limited private;
 
+   package Graphe_Genealogique is new Graphe (T_Etiquette_Sommet,
+      T_Etiquette_Arete);
+   use Graphe_Genealogique;
+
+   subtype T_Liste_Relations is T_Liste_Adjacence;
+   subtype T_Arete_Etiquetee is Graphe_Genealogique.T_Arete_Etiquetee;
+
    procedure Initialiser (Arbre : out T_Arbre_Genealogique);
 
    procedure Detruire (Arbre : in out T_Arbre_Genealogique);
@@ -33,11 +42,22 @@ package Arbre_Genealogique is
 
    procedure Pouet;
 
-private
+   procedure Ajouter_Relation
+     (Arbre                : in out T_Arbre_Genealogique;
+      Personne_Origine     : in     T_Etiquette_Sommet;
+      Relation             : in     T_Etiquette_Arete;
+      Personne_Destination : in     T_Etiquette_Sommet);
 
-   package Graphe_Genealogique is new Graphe (T_Etiquette_Sommet,
-      T_Etiquette_Arete);
-   use Graphe_Genealogique;
+   procedure Liste_Relations
+     (Adjacence :    out T_Liste_Relations; Arbre : in T_Arbre_Genealogique;
+      Origine   : in     T_Etiquette_Sommet);
+
+   function Liste_Non_Vide (Adjacence : T_Liste_Relations) return Boolean;
+
+   procedure Relation_Suivante
+     (Adjacence : in out T_Liste_Relations; Arete : out T_Arete_Etiquetee);
+
+private
 
    package Registre_Civil is new Registre (100, T_Personne);
    use Registre_Civil;

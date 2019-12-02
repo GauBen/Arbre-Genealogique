@@ -39,4 +39,65 @@ package body Arbre_Genealogique is
       Put_Line ("pouet.");
    end Pouet;
 
+   procedure Ajouter_Relation
+     (Arbre                : in out T_Arbre_Genealogique;
+      Personne_Origine     : in     T_Etiquette_Sommet;
+      Relation             : in     T_Etiquette_Arete;
+      Personne_Destination : in     T_Etiquette_Sommet)
+   is
+      Chaine : T_Liste_Adjacence;
+      Arete  : T_Arete_Etiquetee;
+   begin
+      if Personne_Destination = Personne_Origine then
+         raise Relation_Existante;
+      end if;
+      Chaine_Adjacence (Chaine, Arbre.Graphe, Personne_Origine);
+      while Adjacence_Non_Vide (Chaine) loop
+         Arete_Suivante (Chaine, Arete);
+         if Arete.Destination = Personne_Destination then
+            raise Relation_Existante;
+         end if;
+      end loop;
+      case Relation is
+         when A_Pour_Parent =>
+            Ajouter_Arete
+              (Arbre.Graphe, Personne_Origine, A_Pour_Parent,
+               Personne_Destination);
+            Ajouter_Arete
+              (Arbre.Graphe, Personne_Destination, A_Pour_Enfant,
+               Personne_Origine);
+         when A_Pour_Enfant =>
+            Ajouter_Arete
+              (Arbre.Graphe, Personne_Origine, A_Pour_Enfant,
+               Personne_Destination);
+            Ajouter_Arete
+              (Arbre.Graphe, Personne_Destination, A_Pour_Parent,
+               Personne_Origine);
+         when others =>
+            Ajouter_Arete
+              (Arbre.Graphe, Personne_Origine, Relation, Personne_Destination);
+            Ajouter_Arete
+              (Arbre.Graphe, Personne_Destination, Relation, Personne_Origine);
+      end case;
+   end Ajouter_Relation;
+
+   procedure Liste_Relations
+     (Adjacence :    out T_Liste_Relations; Arbre : in T_Arbre_Genealogique;
+      Origine   : in     T_Etiquette_Sommet)
+   is
+   begin
+      Chaine_Adjacence (Adjacence, Arbre.Graphe, Origine);
+   end Liste_Relations;
+
+   function Liste_Non_Vide (Adjacence : T_Liste_Relations) return Boolean is
+   begin
+      return Adjacence_Non_Vide (Adjacence);
+   end Liste_Non_Vide;
+
+   procedure Relation_Suivante
+     (Adjacence : in out T_Liste_Relations; Arete : out T_Arete_Etiquetee)
+   is
+   begin
+      Arete_Suivante (Adjacence, Arete);
+   end Relation_Suivante;
 end Arbre_Genealogique;
