@@ -100,4 +100,18 @@ package body Arbre_Genealogique is
    begin
       Arete_Suivante (Adjacence, Arete);
    end Relation_Suivante;
+
+   procedure Supprimer_Relation
+	   (Arbre 	     : in out T_Arbre_Genealogique;
+	    Personne_Origine : in T_Etiquette_Sommet;
+	    Relation	     : in T_Etiquette_Arete;
+	    Personne_Destination : in T_Etiquette_Sommet) is
+   begin
+	case Relation is
+		when A_Pour_Parent => Supprimer_Arete(Arbre.Graphe,Personne_Origine,A_Pour_Parent,Personne_Destination);
+		Supprimer_Arete(Arbre.Graphe,Personne_Destination,A_Pour_Enfant,Personne_Origine);
+		when others => Supprimer_Arete(Arbre.Graphe,Personne_Origine,Relation,Personne_Destination);
+		Supprimer_Arete(Arbre.Graphe,Personne_Destination,Relation,Personne_Origine);
+	end case;
+   end Supprimer_Relation;
 end Arbre_Genealogique;

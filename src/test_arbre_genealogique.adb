@@ -38,6 +38,18 @@ begin
       New_Line;
    end loop;
    -- ajouter_relation(truc, cle1, cle2, relation);
+   Supprimer_Relation(Arbre,Cle,A_Pour_Enfant,Cle2);
+
+   New_Line;
+   Liste_Relations(Liste,Arbre,Cle);
+   while Liste_Non_Vide(Liste) loop
+	   Relation_Suivante(Liste,Arete);
+	   Put(Cle,0);
+	   Put(" " & T_Etiquette_Arete'Image(Arete.Etiquette) & " ");
+	   Put(Arete.Destination, 0);
+	   New_Line;
+   end loop;
+
 
    Detruire (Arbre);
 

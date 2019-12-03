@@ -47,6 +47,18 @@ begin
       Put (Arete.Destination, 0);
       New_Line;
    end loop;
+   
+   Supprimer_Arete(Graphe1,42,A_Pour_Frere,2);
+   New_Line;
+   Sommet := 42;
+   Chaine_Adjacence(Adjacence,Graphe1,Sommet);
+   while Adjacence_Non_Vide (Adjacence) loop
+	   Arete_Suivante(Adjacence,Arete);
+	   Put(Sommet,0);
+	   Put(" " & T_Etiquette_Arete'image(Arete.Etiquette) & " ");
+	   Put(Arete.Destination,0);
+	   New_Line;
+   end loop;
 
    Detruire (Graphe1);
 

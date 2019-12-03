@@ -56,6 +56,11 @@ package Graphe is
    procedure Arete_Suivante
      (Adjacence : in out T_Liste_Adjacence; Arete: out T_Arete_Etiquetee);
 
+   procedure Supprimer_Arete
+	   (Graphe : in T_Graphe;
+	    Origine : in T_Etiquette_Sommet;Etiquette_Arete : in T_Etiquette_Arete;
+	    Destination : in T_Etiquette_Sommet);
+
 private
 
    -- Un graphe est représenté par une liste chaînée de sommets

@@ -103,4 +103,33 @@ package body Graphe is
       Adjacence := Adjacence.all.Suivante;
    end Arete_Suivante;
 
+   procedure Supprimer_Arete 
+	   (Graphe : in T_Graphe;  Origine : in T_Etiquette_Sommet; 
+	    Etiquette_Arete : in T_Etiquette_Arete;
+	    Destination : in T_Etiquette_Sommet) is
+	    A_Detruire : T_Liste_Adjacence;
+	    Pointeur : T_Graphe;
+	    Pointeur_Arete : T_Liste_Adjacence;
+   begin
+	Pointeur := Trouver_Pointeur_Sommet(Graphe,Origine);
+	Pointeur_Arete := Pointeur.all.Arete;
+	if Pointeur_Arete.all.Etiquette = Etiquette_Arete and Pointeur_Arete.all.Destination.all.Etiquette = Destination then
+		A_Detruire := Pointeur_Arete;
+		Pointeur.all.Arete := Pointeur_Arete.all.Suivante;
+		Detruire_Arete(A_Detruire);
+		return;
+	end if;
+	while Pointeur_Arete.all.Suivante /= null loop
+		if Pointeur_Arete.all.Suivante.all.Etiquette = Etiquette_Arete and Pointeur_Arete.all.Suivante.all.Destination.all.Etiquette = Destination then
+			A_Detruire := Pointeur_Arete.all.Suivante;
+			Pointeur_Arete.all.Suivante := Pointeur_Arete.all.Suivante.all.Suivante;
+			Desallouer_Arete(A_Detruire);
+			return;
+		end if;
+		Pointeur_Arete := Pointeur_Arete.all.Suivante;
+	end loop;
+   end Supprimer_Arete;
+	    
+   
+
 end Graphe;
