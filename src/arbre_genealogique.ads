@@ -1,7 +1,7 @@
 with Ada.Strings.Bounded;
 with Graphe;
 with Registre;
-with Date; use Date;
+
 package Arbre_Genealogique is
 
    Relation_Existante : exception;
@@ -9,25 +9,15 @@ package Arbre_Genealogique is
    -- Documentation : https://en.wikibooks.org/wiki/Ada_Programming/Strings
    package Sb is new Ada.Strings.Bounded.Generic_Bounded_Length (Max => 1023);
 
-
    subtype T_Etiquette_Sommet is Integer;
    type T_Etiquette_Arete is
      (A_Pour_Parent, A_Pour_Enfant, A_Pour_Frere, A_Pour_Conjoint);
-   type T_Genre is 
-     (Homme,Femme,Autre);
-   type T_Lieu is record
-	   Ville : Sb.Bounded_String;
-	   Pays  : Sb.Bounded_String;
-   end record;
+
    type T_Personne is record
       -- Les noms sont toujours problématiques ; lire cet article en anglais
       -- https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/
-      Nom_Usuel         : Sb.Bounded_String; -- Jean Bon
-      Nom_Complet       : Sb.Bounded_String; -- Jean, Michel, Léon Bon
-      Genre		: T_Genre;
-      Date_de_naissance : T_Date;
-      Lieu_de_naissance : T_Lieu;
-      Vivant            : Boolean;
+      Nom_Usuel   : Sb.Bounded_String; -- Jean Bon
+      Nom_Complet : Sb.Bounded_String; -- Jean, Michel, Léon Bon
    end record;
 
    type T_Arbre_Genealogique is limited private;
@@ -72,19 +62,16 @@ package Arbre_Genealogique is
 	    Personne_Origine : in T_Etiquette_Sommet;
 	    Relation	     : in T_Etiquette_Arete;
 	    Personne_Destination: in T_Etiquette_Sommet);
-   function Acceder_Personne 
-	   (Arbre : in T_Arbre_Genealogique; Cle : Integer)
-	    return T_Personne;
+
 private
-	Type T_Arbre_Genealogique is record
-		Graphe : T_Graphe;
-		Registre : T_Registre;
-		Auto_Increment : Integer;
-         end record ; 
 
-	package Registre_civil is new Registre(100,T_Personne);
-	use Registre_civil;
+   package Registre_Civil is new Registre (100, T_Personne);
+   use Registre_Civil;
 
-
+   type T_Arbre_Genealogique is record
+      Graphe         : T_Graphe;
+      Registre       : T_Registre;
+      Auto_Increment : Integer;
+   end record;
 
 end Arbre_Genealogique;

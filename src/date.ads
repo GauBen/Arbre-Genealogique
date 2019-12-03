@@ -1,6 +1,6 @@
-package Date is
+package date is
 
-type T_Mois is (JANVIER,FEVRIER,MARS,AVRIL,MAI,JUIN,JUILLET,AOUT,SEPTEMBRE,OCTOBRE,NOVEMBRE,DECEMBRE);
+type T_Mois is {JANVIER,FEVRIER,MARS,AVRIL,MAI,JUIN,JUILLET,AOUT,SEPTEMBRE,OCTOBRE,NOVEMBRE,DECEMBRE};
    type T_Date is record
       Jour : Integer;
       Mois : T_Mois;
@@ -25,4 +25,3 @@ function D1_Inf_D2
 --    retourne Vrai si la relation est vraie et faux sinon.
 function  D1_Egal_D2
 (Date1 : T_Date; Date2 : T_Date) return Boolean;
-end Date;
