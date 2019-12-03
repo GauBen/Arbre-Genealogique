@@ -34,7 +34,7 @@ package Registre is
    procedure Supprimer (Registre : in out T_Registre; Cle : in Integer);
 
    -- Supprime tous les éléments du registre.
-   procedure Vider (Registre : in out T_Registre) with
+   procedure Detruire (Registre : in out T_Registre) with
       Post => Est_Vide (Registre);
 
 private

@@ -4,17 +4,17 @@ with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 
 procedure Test_Graphe is
 
-   subtype T_Etiquette_Somment is Integer;
+   subtype T_Etiquette_Sommet is Integer;
    type T_Etiquette_Arete is
      (A_Pour_Parent, A_Pour_Enfant, A_Pour_Frere, A_Pour_Conjoint);
 
-   package Graphe_Genealogique is new Graphe (T_Etiquette_Somment, T_Etiquette_Arete);
+   package Graphe_Genealogique is new Graphe (T_Etiquette_Sommet, T_Etiquette_Arete);
    use Graphe_Genealogique;
 
    Graphe1   : T_Graphe;
    Adjacence : T_Liste_Adjacence;
    Arete     : T_Arete_Etiquetee;
-   Sommet    : T_Etiquette_Somment;
+   Sommet    : T_Etiquette_Sommet;
 
 begin
 
@@ -46,6 +46,18 @@ begin
       Put (" " & T_Etiquette_Arete'image(Arete.Etiquette) & " ");
       Put (Arete.Destination, 0);
       New_Line;
+   end loop;
+   
+   Supprimer_Arete(Graphe1,42,A_Pour_Frere,2);
+   New_Line;
+   Sommet := 42;
+   Chaine_Adjacence(Adjacence,Graphe1,Sommet);
+   while Adjacence_Non_Vide (Adjacence) loop
+	   Arete_Suivante(Adjacence,Arete);
+	   Put(Sommet,0);
+	   Put(" " & T_Etiquette_Arete'image(Arete.Etiquette) & " ");
+	   Put(Arete.Destination,0);
+	   New_Line;
    end loop;
 
    Detruire (Graphe1);

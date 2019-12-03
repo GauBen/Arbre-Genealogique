@@ -34,7 +34,7 @@ begin
 
    if not Est_Vide(mon_reg) then put(" oh "); end if;
 
-   Vider(mon_reg);
+   Detruire(mon_reg);
 
    if Est_Vide(mon_reg) then put("yeah"); end if;
 
