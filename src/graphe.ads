@@ -20,10 +20,10 @@ package Graphe is
       Destination : T_Etiquette_Sommet;
    end record;
 
-   -- Exceptions : une étiquette donnée ne correspond à aucun sommet
+   -- Exceptions : une étiquette donnée ne correspond �  aucun sommet
    Sommet_Non_Trouve : exception;
    -- La liste donnée est vide
-   Vide              : exception;
+   Vide : exception;
 
    -- ! Debug
    procedure Pouet;
@@ -48,21 +48,22 @@ package Graphe is
      (Adjacence :    out T_Liste_Adjacence; Graphe : in T_Graphe;
       Origine   : in     T_Etiquette_Sommet);
 
-   -- Renvoie vrai si on peut continuer à itérer.
-   function Adjacence_Non_Vide
-     (Adjacence : T_Liste_Adjacence) return Boolean;
+   -- Renvoie vrai si on peut continuer �  itérer.
+   function Adjacence_Non_Vide (Adjacence : T_Liste_Adjacence) return Boolean;
 
    -- Lit l'arête suivante et avance la lecture.
    procedure Arete_Suivante
-     (Adjacence : in out T_Liste_Adjacence; Arete: out T_Arete_Etiquetee);
+     (Adjacence : in out T_Liste_Adjacence; Arete : out T_Arete_Etiquetee);
 
    procedure Supprimer_Arete
-	   (Graphe : in T_Graphe;
-	    Origine : in T_Etiquette_Sommet;Etiquette_Arete : in T_Etiquette_Arete;
-	    Destination : in T_Etiquette_Sommet);
+     (Graphe          : in T_Graphe; Origine : in T_Etiquette_Sommet;
+      Etiquette_Arete : in T_Etiquette_Arete;
+      Destination     : in T_Etiquette_Sommet);
 
    function Indiquer_Sommet_Existe
-     (Graphe : T_Graphe; Etiquette : Integer) return Boolean
+     (Graphe : T_Graphe; Etiquette : T_Etiquette_Sommet) return Boolean;
+
+   function Est_Vide (Graphe : T_Graphe) return Boolean;
 private
 
    -- Un graphe est représenté par une liste chaînée de sommets
