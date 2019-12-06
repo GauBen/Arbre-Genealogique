@@ -1,17 +1,18 @@
-with Ada.Text_Io;         use Ada.Text_Io;
-with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
-with Ada.Io_Exceptions;
-with Ada.Text_IO.Bounded_IO; 
-with Arbre_Genealogique;   use Arbre_Genealogique;
+with Ada.Text_IO;         use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+with Ada.IO_Exceptions;
+with Ada.Text_IO.Bounded_IO;
+with Arbre_Genealogique;  use Arbre_Genealogique;
 procedure Main is
 
-   package Ada_Strings_IO is new Ada.Text_IO.Bounded_IO(Sb);
+   package Ada_Strings_IO is new Ada.Text_IO.Bounded_IO (Sb);
    use Ada_Strings_IO;
 
    Todo_Exception : exception;
 
    type T_Menu is
-     (Menu_Principal, Menu_Registre, Menu_Registre_Consultation,Menu_Registre_Ajout, Quitter);
+     (Menu_Principal, Menu_Registre, Menu_Registre_Consultation,
+      Menu_Registre_Ajout, Quitter);
 
    type T_Etat is record
       Cle  : Integer;
@@ -47,7 +48,7 @@ procedure Main is
             Correct := Choix in 1 .. Nb_Choix;
             --Correct := Choix in 0 .. Nb_Choix;
          exception
-            when Ada.Io_Exceptions.Data_Error =>
+            when Ada.IO_Exceptions.Data_Error =>
                Correct := False;
          end;
          Skip_Line;
@@ -74,7 +75,7 @@ procedure Main is
             Get (Cle);
             Correct := Cle >= 0;
          exception
-            when Ada.Io_Exceptions.Data_Error =>
+            when Ada.IO_Exceptions.Data_Error =>
                Correct := False;
          end;
          Skip_Line;
@@ -138,7 +139,9 @@ procedure Main is
    end Afficher_Menu_Registre;
 
    procedure Afficher_Menu_Registre_Consultation (Etat : in out T_Etat) is
-      Cle : Integer;
+      Cle      : Integer;
+      Personne : T_Personne;
+      Choix    : Integer;
    begin
       Put_Line ("* Consultation du registre *");
       New_Line;
@@ -147,38 +150,64 @@ procedure Main is
       if Cle = 0 then
          Etat.Menu := Menu_Registre;
          return;
+      elsif not Existe_Registre (Arbre, Cle) then
+         Put_Line ("Clé inconnue");
+
+      else
+         Personne := Acceder_Personne (Arbre, Cle);
+         Put_Line ("<" & Integer'Image (Cle) & ">");
+         Put_Line (Sb.To_String (Personne.Nom_Usuel));
+         Put (" * Nom complet : ");
+         Put_Line (Sb.To_String (Personne.Nom_Complet));
+
+         Put_Line ("Menu : ");
+         Put_Line ("1. Consulter son arbre généalogique");
+         Put_Line ("2. Modifier les informations");
+         Put_Line ("3. Retour");
+         Put ("Votre Choix [1, 2 ou 3] : ");
+         Choisir_Cle (Choix);
+         case Choix is
+            when 1 =>
+               raise Todo_Exception;
+            when 2 =>
+               raise Todo_Exception;
+            when 3 =>
+               Etat.Menu := Menu_Registre;
+            when others =>
+               null;
+         end case;
       end if;
-      raise Todo_Exception;
    end Afficher_Menu_Registre_Consultation;
 
    procedure Afficher_Menu_Registre_Ajout (Etat : in out T_Etat) is
       Nom_Complet : Sb.Bounded_String;
-      Nom_Usuel : Sb.Bounded_String;
-      Personne : T_Personne;
-      Choix : Character;
-      Cle : Integer;
+      Nom_Usuel   : Sb.Bounded_String;
+      Personne    : T_Personne;
+      Choix       : Character;
+      Cle         : Integer;
    begin
-      Put_Line("* Ajouter une personne au registre*");
+      Put_Line ("* Ajouter une personne au registre*");
       New_Line;
-      Put_Line("Informations requises : nom usuel, nom complet, sexe, date et lieu de naissance.");
+      Put_Line
+        ("Informations requises : nom usuel, nom complet, sexe, date et lieu de naissance.");
       New_Line;
-      Put("Nom usuel : ");
+      Put ("Nom usuel : ");
       Nom_Usuel := Get_Line;
-      Put("Nom Complet : ");
+      Put ("Nom Complet : ");
       Nom_Complet := Get_Line;
-      Put("Confirmer l'ajout [O pour oui, N pour non] : ");
-      Get(Choix);
+      Put ("Confirmer l'ajout [O pour oui, N pour non] : ");
+      Get (Choix);
       --while Choix/='o' or Choix/= 'O' or Choix /= 'n' or Choix /= 'N' loop
-        -- Put_Line("Choix incorrect");
-         --Put("Confirmer l'ajout [O pour oui, N pour non] : ");
-         --Get(Choix);
+      -- Put_Line("Choix incorrect");
+      --Put("Confirmer l'ajout [O pour oui, N pour non] : ");
+      --Get(Choix);
       --end loop;
-      Personne := (Nom_Usuel,Nom_Complet);
+      Personne := (Nom_Usuel, Nom_Complet);
       if Choix = 'o' or Choix = 'O' then
-         Generer_Cle(Arbre,Cle);
-         Attribuer_Registre(Arbre,Cle,Personne);
-         Put("Personne ajoutée avec la clé : ");
-         Put_Line(Cle);
+         Generer_Cle (Arbre, Cle);
+         Attribuer_Registre (Arbre, Cle, Personne);
+         Put ("Personne ajoutée avec la clé : ");
+         Put_Line (Integer'Image (Cle));
       end if;
       Etat.Menu := Menu_Registre;
    end Afficher_Menu_Registre_Ajout;
@@ -202,7 +231,7 @@ procedure Main is
    Etat : T_Etat := (Cle => 0, Menu => Menu_Principal);
 
 begin
-   Initialiser(Arbre);
+   Initialiser (Arbre);
    while Etat.Menu /= Quitter loop
       Afficher_Menu (Etat);
    end loop;

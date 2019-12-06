@@ -57,20 +57,26 @@ package Arbre_Genealogique is
    procedure Relation_Suivante
      (Adjacence : in out T_Liste_Relations; Arete : out T_Arete_Etiquetee);
 
-   procedure Supprimer_Relation 
-	   (Arbre	     : in out T_Arbre_Genealogique;
-	    Personne_Origine : in T_Etiquette_Sommet;
-	    Relation	     : in T_Etiquette_Arete;
-	    Personne_Destination: in T_Etiquette_Sommet);
-   
+   procedure Supprimer_Relation
+     (Arbre                : in out T_Arbre_Genealogique;
+      Personne_Origine     : in     T_Etiquette_Sommet;
+      Relation             : in     T_Etiquette_Arete;
+      Personne_Destination : in     T_Etiquette_Sommet);
+
    procedure Attribuer_Registre
-     (Arbre: in out T_Arbre_Genealogique; Cle : in Integer; Element : in T_Personne);
+     (Arbre   : in out T_Arbre_Genealogique; Cle : in Integer;
+      Element : in     T_Personne);
 
-   function Acceder_Personne(Arbre : in T_Arbre_genealogique; Cle : integer) return T_Personne;
+   function Acceder_Personne
+     (Arbre : in T_Arbre_Genealogique; Cle : Integer) return T_Personne;
 
-   procedure Generer_Cle(Arbre : in out T_Arbre_Genealogique; Cle : out Integer );
+   procedure Generer_Cle
+     (Arbre : in out T_Arbre_Genealogique; Cle : out Integer);
 
-   private
+   function Existe_Registre
+     (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean;
+
+private
 
    package Registre_Civil is new Registre (100, T_Personne);
    use Registre_Civil;

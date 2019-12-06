@@ -1,4 +1,4 @@
-with Ada.Text_Io; use Ada.Text_Io;
+with Ada.Text_IO; use Ada.Text_IO;
 --with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 
 package body Arbre_Genealogique is
@@ -102,35 +102,56 @@ package body Arbre_Genealogique is
    end Relation_Suivante;
 
    procedure Supprimer_Relation
-	   (Arbre 	     : in out T_Arbre_Genealogique;
-	    Personne_Origine : in T_Etiquette_Sommet;
-	    Relation	     : in T_Etiquette_Arete;
-	    Personne_Destination : in T_Etiquette_Sommet) is
+     (Arbre                : in out T_Arbre_Genealogique;
+      Personne_Origine     : in     T_Etiquette_Sommet;
+      Relation             : in     T_Etiquette_Arete;
+      Personne_Destination : in     T_Etiquette_Sommet)
+   is
    begin
-	case Relation is
-		when A_Pour_Parent => Supprimer_Arete(Arbre.Graphe,Personne_Origine,A_Pour_Parent,Personne_Destination);
-		Supprimer_Arete(Arbre.Graphe,Personne_Destination,A_Pour_Enfant,Personne_Origine);
-		when others => Supprimer_Arete(Arbre.Graphe,Personne_Origine,Relation,Personne_Destination);
-		Supprimer_Arete(Arbre.Graphe,Personne_Destination,Relation,Personne_Origine);
-	end case;
+      case Relation is
+         when A_Pour_Parent =>
+            Supprimer_Arete
+              (Arbre.Graphe, Personne_Origine, A_Pour_Parent,
+               Personne_Destination);
+            Supprimer_Arete
+              (Arbre.Graphe, Personne_Destination, A_Pour_Enfant,
+               Personne_Origine);
+         when others =>
+            Supprimer_Arete
+              (Arbre.Graphe, Personne_Origine, Relation, Personne_Destination);
+            Supprimer_Arete
+              (Arbre.Graphe, Personne_Destination, Relation, Personne_Origine);
+      end case;
    end Supprimer_Relation;
 
-   function Acceder_Personne(Arbre : in T_Arbre_genealogique; Cle : integer) return T_Personne is 
+   function Acceder_Personne
+     (Arbre : in T_Arbre_Genealogique; Cle : Integer) return T_Personne
+   is
    begin
-	   return Acceder(Arbre.Registre,Cle);
+      return Acceder (Arbre.Registre, Cle);
    end Acceder_Personne;
 
    procedure Attribuer_Registre
-     (Arbre : in out T_Arbre_Genealogique; Cle : in Integer; Element : in T_Personne) is
-   begin 
-      Attribuer(Arbre.Registre,Cle,Element);
+     (Arbre   : in out T_Arbre_Genealogique; Cle : in Integer;
+      Element : in     T_Personne)
+   is
+   begin
+      Attribuer (Arbre.Registre, Cle, Element);
    end Attribuer_Registre;
 
-   procedure Generer_Cle(Arbre : in out T_Arbre_Genealogique;Cle : out Integer
-   ) is
+   procedure Generer_Cle
+     (Arbre : in out T_Arbre_Genealogique; Cle : out Integer)
+   is
    begin
-      Cle := Arbre.Auto_Increment;
-      Arbre.Auto_Increment := Arbre.Auto_Increment +1;
+      Cle                  := Arbre.Auto_Increment;
+      Arbre.Auto_Increment := Arbre.Auto_Increment + 1;
    end Generer_Cle;
+
+   function Existe_Registre
+     (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean
+   is
+   begin
+      return Existe (Arbre.Registre, Cle);
+   end Existe_Registre;
 
 end Arbre_Genealogique;
