@@ -58,6 +58,20 @@ package body Graphe is
       end if;
    end Trouver_Pointeur_Sommet;
 
+   function Indiquer_Sommet_Existe
+     (Graphe : T_Graphe; Etiquette : Integer) return Boolean
+   is
+   begin
+      if Graphe = null then
+         return False;
+      elsif Graphe.all.Etiquette = Etiquette then
+         return True;
+      else
+         return Trouver_Pointeur_Sommet (Graphe.all.Suivant, Etiquette);
+      end if;
+   end Sommet_Existe;
+
+
    procedure Ajouter_Arete
      (Graphe    : in out T_Graphe; Origine : in T_Etiquette_Sommet;
       Etiquette : in T_Etiquette_Arete; Destination : in T_Etiquette_Sommet)

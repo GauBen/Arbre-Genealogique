@@ -61,6 +61,8 @@ package Graphe is
 	    Origine : in T_Etiquette_Sommet;Etiquette_Arete : in T_Etiquette_Arete;
 	    Destination : in T_Etiquette_Sommet);
 
+   function Indiquer_Sommet_Existe
+     (Graphe : T_Graphe; Etiquette : Integer) return Boolean
 private
 
    -- Un graphe est représenté par une liste chaînée de sommets
