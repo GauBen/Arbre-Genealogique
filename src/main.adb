@@ -3,6 +3,7 @@ with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Ada.IO_Exceptions;
 with Ada.Text_IO.Bounded_IO;
 with Arbre_Genealogique;  use Arbre_Genealogique;
+with Date; use Date;
 procedure Main is
 
    package Ada_Strings_IO is new Ada.Text_IO.Bounded_IO (Sb);
@@ -159,7 +160,8 @@ procedure Main is
          Put_Line (Sb.To_String (Personne.Nom_Usuel));
          Put (" * Nom complet : ");
          Put_Line (Sb.To_String (Personne.Nom_Complet));
-
+         Put (" * Sexe : ");
+         Put_Line(T_Genre'Image(Personne.Genre));
          Put_Line ("Menu : ");
          Put_Line ("1. Consulter son arbre généalogique");
          Put_Line ("2. Modifier les informations");
@@ -182,6 +184,8 @@ procedure Main is
    procedure Afficher_Menu_Registre_Ajout (Etat : in out T_Etat) is
       Nom_Complet : Sb.Bounded_String;
       Nom_Usuel   : Sb.Bounded_String;
+      Genrelue    : Character;
+      Genre       : T_Genre;
       Personne    : T_Personne;
       Choix       : Character;
       Cle         : Integer;
@@ -195,6 +199,16 @@ procedure Main is
       Nom_Usuel := Get_Line;
       Put ("Nom Complet : ");
       Nom_Complet := Get_Line;
+      Put ("Sexe [F pour féminin, M pour masculin, A pour autre] : ");
+      Get(Genrelue);
+      case Genrelue is 
+         when 'F' =>
+            Genre := Feminin;
+         when 'M' =>
+            Genre := Masculin;
+         when others =>
+            Genre := Autre;
+      end case;
       Put ("Confirmer l'ajout [O pour oui, N pour non] : ");
       Get (Choix);
       --while Choix/='o' or Choix/= 'O' or Choix /= 'n' or Choix /= 'N' loop
@@ -202,7 +216,7 @@ procedure Main is
       --Put("Confirmer l'ajout [O pour oui, N pour non] : ");
       --Get(Choix);
       --end loop;
-      Personne := (Nom_Usuel, Nom_Complet);
+      Personne := (Nom_Usuel, Nom_Complet,Genre);
       if Choix = 'o' or Choix = 'O' then
          Generer_Cle (Arbre, Cle);
          Attribuer_Registre (Arbre, Cle, Personne);
