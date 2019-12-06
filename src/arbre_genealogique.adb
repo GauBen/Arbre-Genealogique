@@ -119,4 +119,17 @@ package body Arbre_Genealogique is
    begin
 	   return Acceder(Arbre.Registre,Cle);
    end Acceder_Personne;
+
+   procedure Attribuer_Registre
+     (Arbre : in out T_Arbre_Genealogique; Cle : in Integer; Element : in T_Personne) is
+   begin 
+      Attribuer(Arbre.Registre,Cle,Element);
+   end Attribuer_Registre;
+
+   procedure Generer_Cle(Arbre : in out T_Arbre_Genealogique;Cle : out Integer) is
+   begin
+      Cle := Arbre;Auto_Increment;
+      Arbre.Auto_Increment := Arbre.Auto_Increment +1
+   end Generer_Cle;
+
 end Arbre_Genealogique;

@@ -62,8 +62,15 @@ package Arbre_Genealogique is
 	    Personne_Origine : in T_Etiquette_Sommet;
 	    Relation	     : in T_Etiquette_Arete;
 	    Personne_Destination: in T_Etiquette_Sommet);
+   
+   procedure Attribuer_Registre
+     (Arbre: in out T_Arbre_Genealogique; Cle : in Integer; Element : in T_Personne);
 
-private
+   function Acceder_Personne(Arbre : in T_Arbre_genealogique; Cle : integer) return T_Personne;
+
+   procedure Generer_Cle(Arbre : in out T_Arbre_Genealogique; Cle : out Integer );
+
+   private
 
    package Registre_Civil is new Registre (100, T_Personne);
    use Registre_Civil;

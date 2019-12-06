@@ -7,7 +7,7 @@ procedure Main is
    Todo_Exception : exception;
 
    type T_Menu is
-     (Menu_Principal, Menu_Registre, Menu_Registre_Consultation, Quitter);
+     (Menu_Principal, Menu_Registre, Menu_Registre_Consultation,Menu_Registre_Ajout, Quitter);
 
    type T_Etat is record
       Cle  : Integer;
@@ -145,6 +145,40 @@ procedure Main is
       raise Todo_Exception;
    end Afficher_Menu_Registre_Consultation;
 
+   procedure Afficher_Menu_Registre_Ajout (Etat : in out T_Etat) is
+      Nom_Usuel : Sb.Bounded_String;
+      Nom_Complet : Sb.Bounded_String;
+      Personne : T_Personne;
+      Choix : Character;
+      Cle : Integer;
+   begin
+      Put_Line("* Ajouter une personne au registre*");
+      New_Line;
+      Put_Line("Informations requises : nom usuel, nom complet, sexe, date et lieu de naissance.");
+      New_Line;
+      Put("Nom usuel : ");
+      Get(Nom_Usuel);
+      New_Line;
+      Put("Nom Complet : ");
+      Get(Nom_Complet);
+      New_Line;
+      Put("Confirmer l'ajout [O pour oui, N pour non] : ");
+      Get(Choix);
+      while Choix/='o' or Choix/= 'O' or Choix /= 'n' or Choix /= 'N' loop
+         Put_Line("Choix incorrect")
+         Put("Confirmer l'ajout [O pour oui, N pour non] : ");
+         Get(Choix);
+      end loop;
+      Personne := (Nom_Usuel,Nom_Complet);
+      if Choix = 'o' or Choix = 'O' then
+         Generer_Cle(Arbre,Cle);
+         Attribuer_Registre(Arbre,Cle,Personne);
+         Put_Line("Personne ajoutée avec la clé : ");
+         Put(Cle);
+      end if;
+      
+   end Afficher_Menu_Registre_Ajout;
+
    procedure Afficher_Menu (Etat : in out T_Etat) is
    begin
       case Etat.Menu is
@@ -154,6 +188,8 @@ procedure Main is
             Afficher_Menu_Registre (Etat);
          when Menu_Registre_Consultation =>
             Afficher_Menu_Registre_Consultation (Etat);
+         when Menu_Registre_Ajout =>
+            Afficher_Menu_Registre_Ajout (Etat);
          when others =>
             Etat.Menu := Quitter;
       end case;
