@@ -115,7 +115,7 @@ package body Arbre_Genealogique is
 	end case;
    end Supprimer_Relation;
 
-   function Acceder_Personne(Arbre : in T_Arbre_genealogique, Cle : integer) is 
+   function Acceder_Personne(Arbre : in T_Arbre_genealogique; Cle : integer) return T_Personne is 
    begin
 	   return Acceder(Arbre.Registre,Cle);
    end Acceder_Personne;
@@ -126,10 +126,11 @@ package body Arbre_Genealogique is
       Attribuer(Arbre.Registre,Cle,Element);
    end Attribuer_Registre;
 
-   procedure Generer_Cle(Arbre : in out T_Arbre_Genealogique;Cle : out Integer) is
+   procedure Generer_Cle(Arbre : in out T_Arbre_Genealogique;Cle : out Integer
+   ) is
    begin
-      Cle := Arbre;Auto_Increment;
-      Arbre.Auto_Increment := Arbre.Auto_Increment +1
+      Cle := Arbre.Auto_Increment;
+      Arbre.Auto_Increment := Arbre.Auto_Increment +1;
    end Generer_Cle;
 
 end Arbre_Genealogique;
