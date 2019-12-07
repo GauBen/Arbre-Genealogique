@@ -1,7 +1,7 @@
 with Ada.Strings.Bounded;
 with Graphe;
 with Registre;
-
+with Date; use Date;
 package Arbre_Genealogique is
 
    Relation_Existante : exception;
@@ -15,12 +15,15 @@ package Arbre_Genealogique is
 
    type T_Genre is (Masculin,Feminin,Autre);
 
+
    type T_Personne is record
       -- Les noms sont toujours problématiques ; lire cet article en anglais
       -- https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/
       Nom_Usuel   : Sb.Bounded_String; -- Jean Bon
       Nom_Complet : Sb.Bounded_String; -- Jean, Michel, Léon Bon
       Genre       : T_Genre;
+      Date_de_naissance : T_Date;
+      Lieu_de_naissance : Sb.Bounded_String;
    end record;
 
    type T_Arbre_Genealogique is limited private;

@@ -146,7 +146,7 @@ procedure Main is
    begin
       Put_Line ("* Consultation du registre *");
       New_Line;
-      Put_Line ("Entrez la clé de la personne que vous voulez consulter.");
+      Put_Line ("Entrez la clé de la personne que vous voulez consulter [0 pour retour].");
       Choisir_Cle (Cle);
       if Cle = 0 then
          Etat.Menu := Menu_Registre;
@@ -162,6 +162,7 @@ procedure Main is
          Put_Line (Sb.To_String (Personne.Nom_Complet));
          Put (" * Sexe : ");
          Put_Line(T_Genre'Image(Personne.Genre));
+         Put_Line(" * Né le" & Integer'Image(Personne.Date_de_naissance.Jour) & " " & T_Mois'Image(Personne.Date_de_naissance.Mois) & Integer'Image(Personne.Date_de_naissance.Annee) & " à " & Sb.To_String (Personne.Lieu_de_naissance) );
          Put_Line ("Menu : ");
          Put_Line ("1. Consulter son arbre généalogique");
          Put_Line ("2. Modifier les informations");
@@ -181,9 +182,56 @@ procedure Main is
       end if;
    end Afficher_Menu_Registre_Consultation;
 
+   function Determiner_Jour(Datelue : in Integer) return Integer is
+   begin
+      return Datelue/1000000;
+   end Determiner_Jour;
+
+   function Determiner_Mois(Datelue : Integer) return T_Mois is
+      Moislu : Integer;
+   begin
+      Moislu := Datelue/10000 mod 100;
+      case Moislu is
+         when 1 =>
+            return JANVIER;
+         when 2 =>
+            return FEVRIER;
+         when 3 =>
+            return MARS;
+         when 4 =>
+            return AVRIL;
+         when 5 =>
+            return MAI;
+         when 6 =>
+            return JUIN;
+         when 7 =>
+            return JUILLET;
+         when 8 =>
+            return AOUT;
+         when 9 =>
+            return SEPTEMBRE;
+         when 10 =>
+            return OCTOBRE;
+         when 11 =>
+            return NOVEMBRE;
+         when 12 =>
+            return DECEMBRE;
+         when others =>
+            null;
+      end case;
+   end Determiner_Mois;
+
+   function Determiner_Annee(Datelue : Integer) return Integer is
+   begin
+      return Datelue mod 10000;
+   end Determiner_Annee;
+
    procedure Afficher_Menu_Registre_Ajout (Etat : in out T_Etat) is
       Nom_Complet : Sb.Bounded_String;
       Nom_Usuel   : Sb.Bounded_String;
+      Date_de_naissance : T_Date;
+      Datelue     : Integer;
+      Lieu_de_naissance : Sb.Bounded_String;
       Genrelue    : Character;
       Genre       : T_Genre;
       Personne    : T_Personne;
@@ -201,7 +249,7 @@ procedure Main is
       Nom_Complet := Get_Line;
       Put ("Sexe [F pour féminin, M pour masculin, A pour autre] : ");
       Get(Genrelue);
-      case Genrelue is 
+      case Genrelue is
          when 'F' =>
             Genre := Feminin;
          when 'M' =>
@@ -209,6 +257,13 @@ procedure Main is
          when others =>
             Genre := Autre;
       end case;
+      Put("Date de naissance [au format JJMMAAAA] : ");
+      Get(Datelue);
+      Date_de_naissance := (Determiner_Jour(Datelue),Determiner_Mois(Datelue),Determiner_Annee(Datelue));
+      Put("Lieu de naissance [au format Ville, Pays] : ");
+      Skip_Line;
+      Lieu_de_naissance := Get_Line;
+      New_Line;
       Put ("Confirmer l'ajout [O pour oui, N pour non] : ");
       Get (Choix);
       --while Choix/='o' or Choix/= 'O' or Choix /= 'n' or Choix /= 'N' loop
@@ -216,7 +271,7 @@ procedure Main is
       --Put("Confirmer l'ajout [O pour oui, N pour non] : ");
       --Get(Choix);
       --end loop;
-      Personne := (Nom_Usuel, Nom_Complet,Genre);
+      Personne := (Nom_Usuel, Nom_Complet,Genre,Date_de_naissance,Lieu_de_naissance);
       if Choix = 'o' or Choix = 'O' then
          Generer_Cle (Arbre, Cle);
          Attribuer_Registre (Arbre, Cle, Personne);
