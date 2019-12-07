@@ -13,7 +13,7 @@ procedure Main is
 
    type T_Menu is
      (Menu_Principal, Menu_Registre, Menu_Registre_Consultation,
-      Menu_Registre_Ajout, Quitter);
+      Menu_Registre_Ajout, Menu_Registre_Modification, Quitter);
 
    type T_Etat is record
       Cle  : Integer;
@@ -168,12 +168,13 @@ procedure Main is
          Put_Line ("2. Modifier les informations");
          Put_Line ("3. Retour");
          Put ("Votre Choix [1, 2 ou 3] : ");
-         Choisir_Cle (Choix);
+         Choisir (3,Choix);
          case Choix is
             when 1 =>
                raise Todo_Exception;
             when 2 =>
-               raise Todo_Exception;
+               Etat.Cle := Cle;
+               Etat.Menu := Menu_Registre_Modification;
             when 3 =>
                Etat.Menu := Menu_Registre;
             when others =>
@@ -281,6 +282,65 @@ procedure Main is
       Etat.Menu := Menu_Registre;
    end Afficher_Menu_Registre_Ajout;
 
+   procedure Afficher_Menu_Registre_Modification(Etat : in out T_Etat) is
+   Personne : T_Personne;
+   Personne_Mod : T_Personne;
+   Nom_Complet : Sb.Bounded_String;
+   Nom_Usuel   : Sb.Bounded_String;
+   Date_de_naissance : T_Date;
+   Datelue     : Integer;
+   Lieu_de_naissance : Sb.Bounded_String;
+   Genrelue    : Character;
+   Genre       : T_Genre;
+   Choix       : Character;
+   begin
+      Put_Line("* Modification d'une personne du registre *");
+      New_Line;
+      Put_Line("Informations actuelles : ");
+      Personne := Acceder_Personne (Arbre, Etat.Cle);
+      Put_Line ("<" & Integer'Image (Etat.Cle) & ">");
+      Put_Line (Sb.To_String (Personne.Nom_Usuel));
+      Put (" * Nom complet : ");
+      Put_Line (Sb.To_String (Personne.Nom_Complet));
+      Put (" * Sexe : ");
+      Put_Line(T_Genre'Image(Personne.Genre));
+      Put_Line(" * Né le" & Integer'Image(Personne.Date_de_naissance.Jour) & " " & T_Mois'Image(Personne.Date_de_naissance.Mois) & Integer'Image(Personne.Date_de_naissance.Annee) & " à " & Sb.To_String (Personne.Lieu_de_naissance) );
+      New_Line;
+      Put ("Nom usuel : ");
+      Nom_Usuel := Get_Line;
+      Put ("Nom Complet : ");
+      Nom_Complet := Get_Line;
+      Put ("Sexe [F pour féminin, M pour masculin, A pour autre] : ");
+      Get(Genrelue);
+      case Genrelue is
+         when 'F' =>
+            Genre := Feminin;
+         when 'M' =>
+            Genre := Masculin;
+         when others =>
+            Genre := Autre;
+      end case;
+      Put("Date de naissance [au format JJMMAAAA] : ");
+      Get(Datelue);
+      Date_de_naissance := (Determiner_Jour(Datelue),Determiner_Mois(Datelue),Determiner_Annee(Datelue));
+      Put("Lieu de naissance [au format Ville, Pays] : ");
+      Skip_Line;
+      Lieu_de_naissance := Get_Line;
+      New_Line;
+      Put ("Confirmer l'ajout [O pour oui, N pour non] : ");
+      Get (Choix);
+      --while Choix/='o' or Choix/= 'O' or Choix /= 'n' or Choix /= 'N' loop
+      -- Put_Line("Choix incorrect");
+      --Put("Confirmer l'ajout [O pour oui, N pour non] : ");
+      --Get(Choix);
+      --end loop;
+      Personne_Mod := (Nom_Usuel, Nom_Complet,Genre,Date_de_naissance,Lieu_de_naissance);
+      Attribuer_Registre (Arbre, Etat.Cle, Personne_Mod);
+      Put_Line("Personne modifiée avec succès");
+      New_Line;
+      Etat.Cle := 0;
+      Etat.Menu := Menu_Registre;
+   end Afficher_Menu_Registre_Modification;
    procedure Afficher_Menu (Etat : in out T_Etat) is
    begin
       case Etat.Menu is
@@ -292,6 +352,8 @@ procedure Main is
             Afficher_Menu_Registre_Consultation (Etat);
          when Menu_Registre_Ajout =>
             Afficher_Menu_Registre_Ajout (Etat);
+         when Menu_Registre_Modification =>
+            Afficher_Menu_Registre_Modification (Etat);
          when others =>
             Etat.Menu := Quitter;
       end case;
