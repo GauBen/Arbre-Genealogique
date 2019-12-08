@@ -15,7 +15,9 @@ procedure Main is
    type T_Menu is
      (Menu_Principal, Menu_Registre, Menu_Registre_Consultation_Selection,
       Menu_Registre_Consultation_Personne, Menu_Registre_Ajout,
-      Menu_Registre_Modification, Quitter);
+      Menu_Registre_Modification, Menu_Arbre_Selection,
+      Menu_Arbre_Consultation, Menu_Arbre_Ajouter_Relation,
+      Menu_Arbre_Supprimer_Relation, Quitter);
 
    type T_Etat is record
       Arbre : T_Arbre_Genealogique;
@@ -111,7 +113,7 @@ procedure Main is
          when 1 =>
             Etat.Menu := Menu_Registre;
          when 2 =>
-            raise Todo_Exception;
+            Etat.Menu := Menu_Arbre_Selection;
          when others =>
             Etat.Menu := Quitter;
       end case;
@@ -176,7 +178,6 @@ procedure Main is
      (Etat : in out T_Etat)
    is
       Cle      : Integer;
-      Personne : T_Personne;
       Correct  : Boolean;
    begin
       Put_Line ("* Consultation du registre *");
@@ -184,7 +185,7 @@ procedure Main is
       Correct := False;
       while not Correct loop
          Put_Line
-         ("Entrez la clé de la personne que vous voulez consulter [0 pour retour].");
+           ("Entrez la clé de la personne que vous voulez consulter [0 pour retour].");
          Choisir_Cle (Cle);
          Correct := Cle = 0 or else Existe_Registre (Etat.Arbre, Cle);
          if not Correct then
@@ -192,12 +193,10 @@ procedure Main is
             New_Line;
          end if;
       end loop;
+      New_Line;
       if Cle = 0 then
          Etat.Menu := Menu_Registre;
       else
-         Personne := Acceder_Personne (Etat.Arbre, Cle);
-         Afficher_Personne (Cle, Personne);
-         New_Line;
          Etat.Cle  := Cle;
          Etat.Menu := Menu_Registre_Consultation_Personne;
       end if;
@@ -207,8 +206,12 @@ procedure Main is
    procedure Afficher_Menu_Registre_Consultation_Personne
      (Etat : in out T_Etat)
    is
+      Personne : T_Personne;
       Choix : Integer;
    begin
+      Personne := Lire_Registre (Etat.Arbre, Etat.Cle);
+      Afficher_Personne (Etat.Cle, Personne);
+      New_Line;
       Put_Line ("Menu : ");
       Put_Line ("1. Consulter son arbre généalogique");
       Put_Line ("2. Modifier les informations");
@@ -218,7 +221,7 @@ procedure Main is
       New_Line;
       case Choix is
          when 1 =>
-            raise Todo_Exception;
+            Etat.Menu := Menu_Arbre_Consultation;
          when 2 =>
             Etat.Menu := Menu_Registre_Modification;
          when 3 =>
@@ -303,8 +306,9 @@ procedure Main is
       Skip_Line;
 
       if Choix = 'o' or Choix = 'O' then
-         Generer_Cle (Etat.Arbre, Cle);
-         Attribuer_Registre (Etat.Arbre, Cle, Personne);
+         -- Generer_Cle (Etat.Arbre, Cle);
+         -- Attribuer_Registre (Etat.Arbre, Cle, Personne);
+         Ajouter_Personne (Etat.Arbre, Personne, Cle);
          Put ("Personne ajoutée avec la clé : ");
          Put (Cle, 0);
       else
@@ -317,6 +321,7 @@ procedure Main is
 
    end Afficher_Menu_Registre_Ajout;
 
+   -- Permet de modifier une personne enregistrée.
    procedure Afficher_Menu_Registre_Modification (Etat : in out T_Etat) is
       Personne : T_Personne;
       Choix    : Character;
@@ -324,7 +329,7 @@ procedure Main is
       Put_Line ("* Modification d'une personne du registre *");
       New_Line;
       Put_Line ("Informations actuelles : ");
-      Personne := Acceder_Personne (Etat.Arbre, Etat.Cle);
+      Personne := Lire_Registre (Etat.Arbre, Etat.Cle);
       Afficher_Personne (Etat.Cle, Personne);
       New_Line;
       Saisir_Personne (Personne);
@@ -344,6 +349,191 @@ procedure Main is
       Etat.Menu := Menu_Registre;
    end Afficher_Menu_Registre_Modification;
 
+   -- Demande une clé pour afficher les relations d'une personne.
+   procedure Afficher_Menu_Arbre_Selection (Etat : in out T_Etat) is
+      Cle     : Integer;
+      Correct : Boolean;
+   begin
+      Put_Line ("* Arbre généalogique *");
+      New_Line;
+      Correct := False;
+      while not Correct loop
+         Put_Line
+           ("Entrez la clé de la personne dont vous voulez consulter l'arbre [0 pour retour].");
+         Choisir_Cle (Cle);
+         Correct := Cle = 0 or else Existe_Registre (Etat.Arbre, Cle);
+         if not Correct then
+            Put_Line ("Clé inconnue.");
+            New_Line;
+         end if;
+      end loop;
+      New_Line;
+      if Cle = 0 then
+         Etat.Menu := Menu_Principal;
+      else
+         Etat.Cle  := Cle;
+         Etat.Menu := Menu_Arbre_Consultation;
+      end if;
+   end Afficher_Menu_Arbre_Selection;
+
+   -- Affiche les relations d'une personne.
+   procedure Afficher_Menu_Arbre_Consultation (Etat : in out T_Etat) is
+      Liste    : T_Liste_Relations;
+      Relation : T_Arete_Etiquetee;
+      Choix    : Integer;
+   begin
+      Liste_Relations (Liste, Etat.Arbre, Etat.Cle);
+      Put_Line ("Relations :");
+      if not Liste_Non_Vide (Liste) then
+         Put_Line ("(Aucune relation)");
+      end if;
+      while Liste_Non_Vide (Liste) loop
+         Relation_Suivante (Liste, Relation);
+         Put (" * ");
+         Put (T_Etiquette_Arete'Image (Relation.Etiquette));
+         Put (" ");
+         Put (Relation.Destination, 0);
+         New_Line;
+      end loop;
+      New_Line;
+      Put_Line ("Menu :");
+      Put_Line ("1. Consulter dans le registre");
+      Put_Line ("2. Consulter une autre personne");
+      Put_Line ("3. Ajouter une relation");
+      Put_Line ("4. Supprimer une relation");
+      Put_Line ("5. Afficher un arbre de parenté");
+      Put_Line ("6. Retour");
+      New_Line;
+      Choisir (6, Choix);
+      New_Line;
+      case Choix is
+         when 1 =>
+            Etat.Menu := Menu_Registre_Consultation_Personne;
+         when 2 =>
+            Etat.Menu := Menu_Arbre_Selection;
+         when 3 =>
+            Etat.Menu := Menu_Arbre_Ajouter_Relation;
+         when 4 =>
+            Etat.Menu := Menu_Arbre_Supprimer_Relation;
+         when 5 =>
+            raise Todo_Exception;
+         when 6 =>
+            Etat.Menu := Menu_Principal;
+         when others =>
+            Etat.Menu := Quitter;
+      end case;
+   end Afficher_Menu_Arbre_Consultation;
+
+   -- Permet d'ajouter une relation.
+   procedure Afficher_Menu_Arbre_Ajouter_Relation (Etat : in out T_Etat) is
+      Dates_Incompatibles : exception;
+
+      Personne_Origine     : T_Personne;
+      Personne_Destination : T_Personne;
+
+      Cle_Destination : Integer;
+      Relation_Lue    : Integer;
+      Correct         : Boolean;
+   begin
+      Put_Line ("Ajouter une relation :");
+      Put_Line ("1. Ajouter un parent");
+      Put_Line ("2. Ajouter un enfant");
+      Put_Line ("3. Ajouter un conjoint");
+      New_Line;
+      Choisir (3, Relation_Lue);
+      New_Line;
+
+      Correct := False;
+      while not Correct loop
+         Put_Line ("Entrez la clé de la personne a lier [0 pour retour].");
+         Choisir_Cle (Cle_Destination);
+         Correct :=
+           Cle_Destination = 0
+           or else Existe_Registre (Etat.Arbre, Cle_Destination);
+         if not Correct then
+            Put_Line ("Clé inconnue.");
+            New_Line;
+         end if;
+      end loop;
+
+      if Cle_Destination = 0 then
+         Put_Line ("Ajout annulé.");
+      else
+         Personne_Origine     := Lire_Registre (Etat.Arbre, Etat.Cle);
+         Personne_Destination := Lire_Registre (Etat.Arbre, Cle_Destination);
+         begin
+            case Relation_Lue is
+               when 1 =>
+                  if D1_Inf_D2
+                      (Personne_Origine.Date_De_Naissance,
+                       Personne_Destination.Date_De_Naissance)
+                  then
+                     raise Dates_Incompatibles;
+                  end if;
+                  Ajouter_Relation
+                    (Etat.Arbre, Etat.Cle, A_Pour_Parent, Cle_Destination);
+               when 2 =>
+                  if D1_Inf_D2
+                      (Personne_Destination.Date_De_Naissance,
+                       Personne_Origine.Date_De_Naissance)
+                  then
+                     raise Dates_Incompatibles;
+                  end if;
+                  Ajouter_Relation
+                    (Etat.Arbre, Etat.Cle, A_Pour_Enfant, Cle_Destination);
+               when 3 =>
+                  Ajouter_Relation
+                    (Etat.Arbre, Etat.Cle, A_Pour_Conjoint, Cle_Destination);
+               when others =>
+                  null;
+            end case;
+            Put_Line ("Relation ajoutée.");
+         exception
+            when Dates_Incompatibles =>
+               Put_Line ("Un parent doit etre plus agé que son enfant.");
+            when Relation_Existante =>
+               Put_Line
+                 ("Une relation entre ces deux personnes existe déja.");
+         end;
+      end if;
+      New_Line;
+      Etat.Menu := Menu_Arbre_Consultation;
+   end Afficher_Menu_Arbre_Ajouter_Relation;
+
+   -- Supprime les relations avec une personne.
+   procedure Afficher_Menu_Arbre_Supprimer_Relation (Etat : in out T_Etat) is
+      Cle_Destination : Integer;
+      Correct         : Boolean;
+   begin
+      Correct := False;
+      while not Correct loop
+         Put_Line ("Entrez la clé de la personne a delier [0 pour retour].");
+         Choisir_Cle (Cle_Destination);
+         Correct :=
+           Cle_Destination = 0
+           or else Existe_Registre (Etat.Arbre, Cle_Destination);
+         if not Correct then
+            Put_Line ("Clé inconnue.");
+            New_Line;
+         end if;
+      end loop;
+
+      if Cle_Destination = 0 then
+         Put_Line ("Suppression annulée.");
+         Etat.Menu := Menu_Arbre_Consultation;
+      else
+         Supprimer_Relation
+           (Etat.Arbre, Etat.Cle, A_Pour_Parent, Cle_Destination);
+         Supprimer_Relation
+           (Etat.Arbre, Etat.Cle, A_Pour_Enfant, Cle_Destination);
+         Supprimer_Relation
+           (Etat.Arbre, Etat.Cle, A_Pour_Conjoint, Cle_Destination);
+         Put_Line ("Suppression effectuée.");
+      end if;
+      New_Line;
+      Etat.Menu := Menu_Arbre_Consultation;
+   end Afficher_Menu_Arbre_Supprimer_Relation;
+
    -- Affiche le menu correspondant a l'état du programme.
    procedure Afficher_Menu (Etat : in out T_Etat) is
    begin
@@ -360,6 +550,14 @@ procedure Main is
             Afficher_Menu_Registre_Ajout (Etat);
          when Menu_Registre_Modification =>
             Afficher_Menu_Registre_Modification (Etat);
+         when Menu_Arbre_Selection =>
+            Afficher_Menu_Arbre_Selection (Etat);
+         when Menu_Arbre_Consultation =>
+            Afficher_Menu_Arbre_Consultation (Etat);
+         when Menu_Arbre_Ajouter_Relation =>
+            Afficher_Menu_Arbre_Ajouter_Relation (Etat);
+         when Menu_Arbre_Supprimer_Relation =>
+            Afficher_Menu_Arbre_Supprimer_Relation (Etat);
          when others =>
             Etat.Menu := Quitter;
       end case;
@@ -367,10 +565,26 @@ procedure Main is
 
    Etat : T_Etat;
 
+   Cle : Integer;
+
 begin
 
    Initialiser (Etat.Arbre);
    Etat.Menu := Menu_Principal;
+
+   Ajouter_Personne
+     (Etat.Arbre,
+      (Sb.To_Bounded_String ("Jean Bon"),
+       Sb.To_Bounded_String ("Jean, Eude Bon"), Masculin,
+       Creer_Date (31, 1, 1960), Sb.To_Bounded_String ("Paris, France")),
+      Cle);
+
+   Ajouter_Personne
+     (Etat.Arbre,
+      (Sb.To_Bounded_String ("Kevin Bon"),
+       Sb.To_Bounded_String ("Kevin, Junior Bon"), Masculin,
+       Creer_Date (1, 4, 1999), Sb.To_Bounded_String ("Toulouse, France")),
+      Cle);
 
    while Etat.Menu /= Quitter loop
       Afficher_Menu (Etat);
