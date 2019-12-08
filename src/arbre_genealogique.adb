@@ -1,4 +1,4 @@
-with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Text_Io; use Ada.Text_Io;
 --with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 
 package body Arbre_Genealogique is
@@ -123,13 +123,6 @@ package body Arbre_Genealogique is
               (Arbre.Graphe, Personne_Destination, Relation, Personne_Origine);
       end case;
    end Supprimer_Relation;
-
-   function Acceder_Personne
-     (Arbre : in T_Arbre_Genealogique; Cle : Integer) return T_Personne
-   is
-   begin
-      return Acceder (Arbre.Registre, Cle);
-   end Acceder_Personne;
 
    procedure Attribuer_Registre
      (Arbre   : in out T_Arbre_Genealogique; Cle : in Integer;

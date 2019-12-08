@@ -13,17 +13,16 @@ package Arbre_Genealogique is
    type T_Etiquette_Arete is
      (A_Pour_Parent, A_Pour_Enfant, A_Pour_Frere, A_Pour_Conjoint);
 
-   type T_Genre is (Masculin,Feminin,Autre);
-
+   type T_Genre is (Masculin, Feminin, Autre);
 
    type T_Personne is record
       -- Les noms sont toujours problématiques ; lire cet article en anglais
       -- https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/
-      Nom_Usuel   : Sb.Bounded_String; -- Jean Bon
-      Nom_Complet : Sb.Bounded_String; -- Jean, Michel, Léon Bon
-      Genre       : T_Genre;
-      Date_de_naissance : T_Date;
-      Lieu_de_naissance : Sb.Bounded_String;
+      Nom_Usuel         : Sb.Bounded_String; -- Jean Bon
+      Nom_Complet       : Sb.Bounded_String; -- Jean, Michel, Léon Bon
+      Genre             : T_Genre;
+      Date_De_Naissance : T_Date;
+      Lieu_De_Naissance : Sb.Bounded_String;
    end record;
 
    type T_Arbre_Genealogique is limited private;
@@ -72,12 +71,6 @@ package Arbre_Genealogique is
    procedure Attribuer_Registre
      (Arbre   : in out T_Arbre_Genealogique; Cle : in Integer;
       Element : in     T_Personne);
-
-   function Acceder_Personne
-     (Arbre : in T_Arbre_Genealogique; Cle : Integer) return T_Personne;
-
-   procedure Generer_Cle
-     (Arbre : in out T_Arbre_Genealogique; Cle : out Integer);
 
    function Existe_Registre
      (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean;
