@@ -1,13 +1,6 @@
-with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
---
 
 package body Graphe is
-
-   procedure Pouet is
-   begin
-      Put_Line ("Pouet");
-   end Pouet;
 
    procedure Initialiser (Graphe : out T_Graphe) is
    begin
@@ -36,7 +29,7 @@ package body Graphe is
       Desallouer_Sommet (Graphe);
    end Detruire;
 
-   -- ? Exception lorsque le sommet existe déj�  ?
+   -- ? Exception lorsque le sommet existe déj�  ?
    procedure Ajouter_Sommet
      (Graphe : in out T_Graphe; Etiquette : T_Etiquette_Sommet)
    is
@@ -133,6 +126,9 @@ package body Graphe is
    begin
       Pointeur       := Trouver_Pointeur_Sommet (Graphe, Origine);
       Pointeur_Arete := Pointeur.all.Arete;
+      if Pointeur_Arete = null then
+         return;
+      end if;
       if Pointeur_Arete.all.Etiquette = Etiquette_Arete and
         Pointeur_Arete.all.Destination.all.Etiquette = Destination
       then

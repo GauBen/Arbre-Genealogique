@@ -20,13 +20,10 @@ package Graphe is
       Destination : T_Etiquette_Sommet;
    end record;
 
-   -- Exceptions : une étiquette donnée ne correspond �  aucun sommet
+   -- Exceptions : une étiquette donnée ne correspond �  aucun sommet
    Sommet_Non_Trouve : exception;
    -- La liste donnée est vide
    Vide : exception;
-
-   -- ! Debug
-   procedure Pouet;
 
    -- Initialise un graphe vide.
    procedure Initialiser (Graphe : out T_Graphe);
@@ -48,7 +45,7 @@ package Graphe is
      (Adjacence :    out T_Liste_Adjacence; Graphe : in T_Graphe;
       Origine   : in     T_Etiquette_Sommet);
 
-   -- Renvoie vrai si on peut continuer �  itérer.
+   -- Renvoie vrai si on peut continuer �  itérer.
    function Adjacence_Non_Vide (Adjacence : T_Liste_Adjacence) return Boolean;
 
    -- Lit l'arête suivante et avance la lecture.
