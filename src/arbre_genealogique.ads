@@ -45,8 +45,6 @@ package Arbre_Genealogique is
    function Lire_Registre
      (Arbre : T_Arbre_Genealogique; Cle : Integer) return T_Personne;
 
-   procedure Pouet;
-
    procedure Ajouter_Relation
      (Arbre                : in out T_Arbre_Genealogique;
       Personne_Origine     : in     T_Etiquette_Sommet;

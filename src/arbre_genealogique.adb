@@ -1,6 +1,3 @@
-with Ada.Text_Io; use Ada.Text_Io;
---with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
-
 package body Arbre_Genealogique is
 
    procedure Initialiser (Arbre : out T_Arbre_Genealogique) is
@@ -33,11 +30,6 @@ package body Arbre_Genealogique is
    begin
       return Acceder (Arbre.Registre, Cle);
    end Lire_Registre;
-
-   procedure Pouet is
-   begin
-      Put_Line ("pouet.");
-   end Pouet;
 
    procedure Ajouter_Relation
      (Arbre                : in out T_Arbre_Genealogique;
@@ -131,14 +123,6 @@ package body Arbre_Genealogique is
    begin
       Attribuer (Arbre.Registre, Cle, Element);
    end Attribuer_Registre;
-
-   procedure Generer_Cle
-     (Arbre : in out T_Arbre_Genealogique; Cle : out Integer)
-   is
-   begin
-      Cle                  := Arbre.Auto_Increment;
-      Arbre.Auto_Increment := Arbre.Auto_Increment + 1;
-   end Generer_Cle;
 
    function Existe_Registre
      (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean

@@ -1,4 +1,3 @@
-with Text_IO; use Text_IO;
 with Ada.Unchecked_Deallocation;
 
 package body Registre is
