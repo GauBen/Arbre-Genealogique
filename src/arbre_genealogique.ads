@@ -1,4 +1,5 @@
 with Ada.Strings.Bounded;
+with Ada.Strings.Fixed;  use Ada.Strings.Fixed;
 with Graphe;
 with Registre;
 with Date; use Date;
@@ -73,10 +74,15 @@ package Arbre_Genealogique is
    function Existe_Registre
      (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean;
 
+   procedure Recherche_Registre(Registre : in out T_Registre);
+
 private
 
    package Registre_Civil is new Registre (100, T_Personne);
    use Registre_Civil;
+
+   procedure Recherche is
+   new Predicat(T_Element => T_Personne; T_Assertion => Sb.Bounded_String);
 
    type T_Arbre_Genealogique is record
       Graphe         : T_Graphe;
