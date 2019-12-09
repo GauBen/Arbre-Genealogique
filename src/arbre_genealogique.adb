@@ -131,4 +131,18 @@ package body Arbre_Genealogique is
       return Existe (Arbre.Registre, Cle);
    end Existe_Registre;
 
+   procedure Recherche (Cle : Integer; Personne : in T_Personne; Nom_usuel_recherché : in Sb.Bounded_String) is 
+      Nom_usuel_recherché_util : in String;
+    begin
+      Nom_usuel_recherché_util := Sb.To_String(Nom_usuel_recherché);
+      if Personne.Nom_Usuel'Length >= Nom_usuel_recherché_util'Length and then Personne.Nom_Usuel (Personne.Nom_Usuel'First..Personne.Nom_Usuel'First + Nom_usuel_recherché_util'Length - 1) = Nom_usuel_recherché_util then
+         Afficher_Nom_Usuel(Cle,Personne.Nom_usuel);
+      end if;
+   end Recherche;
+
+   procedure Recherche_Registre(Registe : in out T_Registre) is 
+   begin
+      Appliquer_sur_registre(Registre);
+   end Recherche_Registre;
+   
 end Arbre_Genealogique;

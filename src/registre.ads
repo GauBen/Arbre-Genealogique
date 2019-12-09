@@ -16,8 +16,7 @@ package Registre is
    procedure Initialiser (Registre : out T_Registre) with
       Post => Est_Vide (Registre);
 
-
-   -- Renvoie vrai si la clé est presente dans le registre.
+      -- Renvoie vrai si la clé est presente dans le registre.
    function Existe (Registre : T_Registre; Cle : Integer) return Boolean;
 
    -- Insère ou modifie un élément dans le registre.
@@ -26,9 +25,7 @@ package Registre is
 
    -- Renvoie un élément du registre.
    -- Lance Cle_Absente_Exception si la clé n'est pas trouvee.
-   function Acceder
-     (Registre : T_Registre; Cle : Integer)
-      return T_Element;
+   function Acceder (Registre : T_Registre; Cle : Integer) return T_Element;
 
    -- Supprime un élément du registre.
    procedure Supprimer (Registre : in out T_Registre; Cle : in Integer);
@@ -36,6 +33,10 @@ package Registre is
    -- Supprime tous les éléments du registre.
    procedure Detruire (Registre : in out T_Registre) with
       Post => Est_Vide (Registre);
+
+   generic
+      with procedure Predicat (Cle : Integer ; Un_Element : in T_Element; Assertion : in T_Assertion);
+   procedure Appliquer_Sur_Tous (Pointeur : in out T_Pointeur_Sur_Maillon);
 
 private
 
