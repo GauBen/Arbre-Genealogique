@@ -17,7 +17,7 @@ procedure Main is
       Menu_Registre_Consultation_Personne, Menu_Registre_Ajout,
       Menu_Registre_Modification, Menu_Arbre_Selection,
       Menu_Arbre_Consultation, Menu_Arbre_Ajouter_Relation,
-      Menu_Arbre_Supprimer_Relation, Quitter);
+      Menu_Arbre_Supprimer_Relation, Menu_Arbre_Parente, Quitter);
 
    type T_Etat is record
       Arbre : T_Arbre_Genealogique;
@@ -445,7 +445,7 @@ procedure Main is
          when 4 =>
             Etat.Menu := Menu_Arbre_Supprimer_Relation;
          when 5 =>
-            raise Todo_Exception;
+            Etat.Menu := Menu_Arbre_Parente;
          when 6 =>
             Etat.Menu := Menu_Principal;
          when others =>
@@ -563,6 +563,72 @@ procedure Main is
       Etat.Menu := Menu_Arbre_Consultation;
    end Afficher_Menu_Arbre_Supprimer_Relation;
 
+   procedure Afficher_Menu_Arbre_Parente (Etat : in out T_Etat) is
+
+      procedure Afficher_Bandeau (Nombre_Generations : in Integer) is
+      begin
+         for I in 0..Nombre_Generations loop
+            Put (I, 2);
+            Put ("  ");
+         end loop;
+         Put_Line (" génération");
+         for I in 1..(Nombre_Generations*4+15) loop
+            Put ("=");
+         end loop;
+         New_Line;
+      end;
+
+      procedure Afficher_Parente
+        (Etat : in T_Etat; Cle : in Integer; Etiquette : in T_Etiquette_Arete;
+         Nombre_Generations : in Integer; Indentation : in String) is
+         Liste : T_Liste_Relations;
+         Relation : T_Arete_Etiquetee;
+      begin
+         Put (Indentation);
+         Put ("-- ");
+         Afficher_Nom_Usuel (Etat, Cle);
+         New_Line;
+         if Nombre_Generations <= 0 then
+            return;
+         end if;
+         Liste_Relations (Liste, Etat.Arbre, Cle);
+         while Liste_Non_Vide (Liste) loop
+            Relation_Suivante (Liste, Relation);
+            if Relation.Etiquette = Etiquette then
+               Afficher_Parente (Etat, Relation.Destination, Etiquette, Nombre_Generations - 1, Indentation & "    ");
+            end if;
+         end loop;
+      end Afficher_Parente;
+
+      Nombre_Generations : Integer;
+      Correct : Boolean;
+   begin
+      Correct := False;
+      while not Correct loop
+         begin
+            Put_Line ("Nombre de générations à afficher [> 0 pour les parents,");
+            Put ("< 0 pour les enfants, 0 pour retour] : ");
+            Get (Nombre_Generations);
+            Correct := True;
+         exception
+            when Ada.Io_Exceptions.Data_Error =>
+               Correct := False;
+         end;
+         Skip_Line;
+      end loop;
+      New_Line;
+      if Nombre_Generations > 0 then
+         Afficher_Bandeau (Nombre_Generations);
+         Afficher_Parente (Etat, Etat.Cle, A_Pour_Parent, Nombre_Generations, "");
+         New_Line;
+      elsif Nombre_Generations < 0 then
+         Afficher_Bandeau (-Nombre_Generations);
+         Afficher_Parente (Etat, Etat.Cle, A_Pour_Enfant, -Nombre_Generations, "");
+         New_Line;
+      end if;
+      Etat.Menu := Menu_Arbre_Consultation;
+   end;
+
    -- Affiche le menu correspondant a l'état du programme.
    procedure Afficher_Menu (Etat : in out T_Etat) is
    begin
@@ -587,6 +653,8 @@ procedure Main is
             Afficher_Menu_Arbre_Ajouter_Relation (Etat);
          when Menu_Arbre_Supprimer_Relation =>
             Afficher_Menu_Arbre_Supprimer_Relation (Etat);
+         when Menu_Arbre_Parente =>
+            Afficher_Menu_Arbre_Parente (Etat);
          when others =>
             Etat.Menu := Quitter;
       end case;
