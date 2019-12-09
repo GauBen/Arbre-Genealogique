@@ -173,6 +173,16 @@ procedure Main is
       New_Line;
    end Afficher_Personne;
 
+   procedure Afficher_Nom_Usuel (Etat : in T_Etat; Cle : in Integer) is
+      Personne : T_Personne;
+   begin
+      Personne := Lire_Registre (Etat.Arbre, Cle);
+      Put (Personne.Nom_Usuel);
+      Put (" <");
+      Put (Cle, 0);
+      Put (">");
+   end;
+
    -- Affiche le menu qui permet de choisir une personne a consulter dans le registre.
    procedure Afficher_Menu_Registre_Consultation_Selection
      (Etat : in out T_Etat)
@@ -378,23 +388,42 @@ procedure Main is
 
    -- Affiche les relations d'une personne.
    procedure Afficher_Menu_Arbre_Consultation (Etat : in out T_Etat) is
+
+      -- Groupe toutes les relations de même étiquette ensemble.
+      procedure Afficher_Relations_Groupees (Etat : in T_Etat; Etiquette : in T_Etiquette_Arete; Titre : in String) is
+         Liste    : T_Liste_Relations;
+         Relation : T_Arete_Etiquetee;
+         Titre_Affiche : Boolean := False;
+      begin
+         Liste_Relations (Liste, Etat.Arbre, Etat.Cle);
+         while Liste_Non_Vide (Liste) loop
+            Relation_Suivante (Liste, Relation);
+            if Relation.Etiquette = Etiquette then
+               if not Titre_Affiche then
+                  Put_Line (Titre);
+                  Titre_Affiche := True;
+               end if;
+               Put (" * ");
+               Afficher_Nom_Usuel (Etat, Relation.Destination);
+               New_Line;
+            end if;
+         end loop;
+      end;
+
       Liste    : T_Liste_Relations;
-      Relation : T_Arete_Etiquetee;
       Choix    : Integer;
    begin
+      Afficher_Nom_Usuel (Etat, Etat.Cle);
+      New_Line;
+      New_Line;
       Liste_Relations (Liste, Etat.Arbre, Etat.Cle);
-      Put_Line ("Relations :");
       if not Liste_Non_Vide (Liste) then
-         Put_Line ("(Aucune relation)");
+         Put_Line ("Aucune relation.");
+      else
+         Afficher_Relations_Groupees (Etat, A_Pour_Parent, "Parent(s) :");
+         Afficher_Relations_Groupees (Etat, A_Pour_Enfant, "Enfant(s) :");
+         Afficher_Relations_Groupees (Etat, A_Pour_Conjoint, "Conjoint(e) :");
       end if;
-      while Liste_Non_Vide (Liste) loop
-         Relation_Suivante (Liste, Relation);
-         Put (" * ");
-         Put (T_Etiquette_Arete'Image (Relation.Etiquette));
-         Put (" ");
-         Put (Relation.Destination, 0);
-         New_Line;
-      end loop;
       New_Line;
       Put_Line ("Menu :");
       Put_Line ("1. Consulter dans le registre");
