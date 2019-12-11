@@ -7,6 +7,8 @@ package Arbre_Genealogique is
 
    Relation_Existante : exception;
 
+   
+
    -- Documentation : https://en.wikibooks.org/wiki/Ada_Programming/Strings
    package Sb is new Ada.Strings.Bounded.Generic_Bounded_Length (Max => 1023);
 
@@ -74,15 +76,12 @@ package Arbre_Genealogique is
    function Existe_Registre
      (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean;
 
-   procedure Recherche_Registre(Registre : in out T_Registre);
+   procedure Recherche_Nom_Registre_Pont(Arbre : in out T_Arbre_Genealogique; Pile : in out T_Pile; Un_Truc : Sb.Bounded_String);
 
 private
 
-   package Registre_Civil is new Registre (100, T_Personne);
+   package Registre_Civil is new Registre (100, T_Personne,Sb.Bounded_String);
    use Registre_Civil;
-
-   procedure Recherche is
-   new Predicat(T_Element => T_Personne; T_Assertion => Sb.Bounded_String);
 
    type T_Arbre_Genealogique is record
       Graphe         : T_Graphe;

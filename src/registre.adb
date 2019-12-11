@@ -117,20 +117,22 @@ package body Registre is
       end loop;
    end Detruire;
 
-   procedure Appliquer_sur_registre(Registre : in out T_Registre) is
+   procedure Appliquer_sur_tous(Pointeur : in out T_Pointeur_Sur_Maillon;Un_Truc : in T_Truc;Pile : in out T_Pile) is
    begin
-      for i in [1..Modulo] loop
-         Appliquer_sur_tous(Registre(i);
-      end loop;
-   end Appliquer_sur_registre;
-
-   procedure Appliquer_sur_tous(Pointeur : in out T_Pointeur_Sur_Maillon) is 
-   begin
-       if E/=Null then
-           Appliquer_sur_tous(Pointeur.all.Suivant);
-           Predicat(Pointeur.all.Cle,Pointeur.all.Element,Assertion);
-       else
-           Null;
-       end if;
+      if Pointeur /= Null then
+         Appliquer_sur_tous(Pointeur.all.Suivant,Un_Truc,Pile);
+         if Predicat(Pointeur.all.Element,Un_Truc) then
+            Empiler(Pile,(Pointeur.all.Cle,Pointeur.all.Element));
+         end if;
+      end if;
    end Appliquer_sur_tous;
+   
+   procedure Recherche_Sur_Registre(Registre : in out T_Registre; Pile : in out T_Pile; Un_Truc : in T_Truc) is 
+   begin
+      for i in 1..Modulo loop
+         Appliquer_sur_tous(Registre(i),Un_Truc,Pile);
+      end loop;
+   end Recherche_Sur_Registre;
+
+
 end Registre;

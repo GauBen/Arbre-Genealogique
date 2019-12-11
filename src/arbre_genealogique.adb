@@ -131,18 +131,21 @@ package body Arbre_Genealogique is
       return Existe (Arbre.Registre, Cle);
    end Existe_Registre;
 
-   procedure Recherche (Cle : Integer; Personne : in T_Personne; Nom_usuel_recherché : in Sb.Bounded_String) is 
-      Nom_usuel_recherché_util : in String;
-    begin
-      Nom_usuel_recherché_util := Sb.To_String(Nom_usuel_recherché);
-      if Personne.Nom_Usuel'Length >= Nom_usuel_recherché_util'Length and then Personne.Nom_Usuel (Personne.Nom_Usuel'First..Personne.Nom_Usuel'First + Nom_usuel_recherché_util'Length - 1) = Nom_usuel_recherché_util then
-         Afficher_Nom_Usuel(Cle,Personne.Nom_usuel);
-      end if;
-   end Recherche;
-
-   procedure Recherche_Registre(Registe : in out T_Registre) is 
+   function Compatibilite_Nom(Un_Element : T_Personne; Un_Truc : Sb.Bounded_String) return Boolean is 
    begin
-      Appliquer_sur_registre(Registre);
-   end Recherche_Registre;
+      if Sb.To_String(Un_Element.Nom_Usuel)'Length >= Sb.To_String(Un_Truc)'Length and then Sb.To_String(Un_Element.Nom_Usuel) (Sb.To_String(Un_Element.Nom_Usuel)'First..Sb.To_String(Un_Element.Nom_Usuel)'First + Sb.To_String(Un_Truc)'Length - 1) = Sb.To_String(Un_Truc) then
+         return True;
+      elsif Sb.To_String(Un_Element.Nom_Usuel)'Length >= Sb.To_String(Un_Truc)'Length and then Sb.To_String(Un_Truc) (Sb.To_String(Un_Element.Nom_Usuel)'Last - Sb.To_String(Un_Truc)'Length + 1..Sb.To_String(Un_Element.Nom_Usuel)'Last) = Sb.To_String(Un_Truc) then
+         return True;
+      else 
+         return False;
+      end if;
+   end Compatibilite_Nom;
+
+   procedure Recherche_Nom_Registre is new Recherche_Sur_Registre(Predicat => Compatibilite_Nom);
    
+   procedure Recherche_Nom_Registre_Pont(Arbre : in out  T_Arbre_Genealogique; Pile : in out T_Pile; Un_Truc : in Sb.Bounded_String) is 
+   begin
+      Recherche_Nom_Registre(Arbre.Registre,Pile,Un_Truc);
+   end Recherche_Nom_Registre_Pont;
 end Arbre_Genealogique;

@@ -1,9 +1,18 @@
+with Piles;
 generic
    Modulo : Integer;
    type T_Element is private;
-
+   type T_Truc is private;
 -- Un registre est une table de hachage.
 package Registre is
+
+   type T_Couple is record
+      Cle : Integer;
+      Element : T_Element;
+   end record;
+
+   package PilesCouple is new Piles(T_Couple);
+   use PilesCouple;
 
    type T_Registre is limited private;
 
@@ -34,9 +43,9 @@ package Registre is
    procedure Detruire (Registre : in out T_Registre) with
       Post => Est_Vide (Registre);
 
-   generic
-      with procedure Predicat (Cle : Integer ; Un_Element : in T_Element; Assertion : in T_Assertion);
-   procedure Appliquer_Sur_Tous (Pointeur : in out T_Pointeur_Sur_Maillon);
+generic
+   with function Predicat(Un_Element : in T_Element;Un_Truc : T_Truc) return Boolean;
+procedure Recherche_Sur_Registre(Registre : in out T_Registre; Pile : in out T_Pile; Un_Truc : in T_Truc);
 
 private
 
