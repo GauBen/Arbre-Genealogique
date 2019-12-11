@@ -738,4 +738,6 @@ begin
       Afficher_Menu (Etat);
    end loop;
 
+   Detruire (Etat.Arbre);
+
 end Main;
