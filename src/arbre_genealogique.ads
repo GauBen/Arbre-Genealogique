@@ -73,6 +73,10 @@ package Arbre_Genealogique is
    function Existe_Registre
      (Arbre : T_Arbre_Genealogique; Cle : Integer) return Boolean;
 
+   generic
+      with procedure P (Cle : in Integer; Personne : in T_Personne);
+   procedure Appliquer_Sur_Registre (Arbre : in out T_Arbre_Genealogique);
+
 private
 
    package Registre_Civil is new Registre (100, T_Personne);

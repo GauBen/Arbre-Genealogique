@@ -14,8 +14,8 @@ package body Registre is
 
    function Est_Vide (Registre : T_Registre) return Boolean is
    begin
-      for i in Registre'range loop
-         if Registre (i) /= null then
+      for I in Registre'Range loop
+         if Registre (I) /= null then
             return False;
          end if;
       end loop;
@@ -76,6 +76,20 @@ package body Registre is
       raise Cle_Absente_Exception;
    end Acceder;
 
+   procedure Appliquer_Sur_Tous (Registre : in T_Registre) is
+      procedure Appliquer_Sur_Maillon (Pointeur : in T_Pointeur_Sur_Maillon) is
+      begin
+         if Pointeur /= null then
+            P (Pointeur.all.Cle, Pointeur.all.Element);
+            Appliquer_Sur_Maillon (Pointeur.all.Suivant);
+         end if;
+      end Appliquer_Sur_Maillon;
+   begin
+      for I in Registre'Range loop
+         Appliquer_Sur_Maillon (Registre (I));
+      end loop;
+   end Appliquer_Sur_Tous;
+
    procedure Desallouer_Maillon is new Ada.Unchecked_Deallocation (T_Maillon,
       T_Pointeur_Sur_Maillon);
 
@@ -112,8 +126,8 @@ package body Registre is
 
    procedure Detruire (Registre : in out T_Registre) is
    begin
-      for i in Registre'range loop
-         Supprimer_Maillons (Registre (i));
+      for I in Registre'Range loop
+         Supprimer_Maillons (Registre (I));
       end loop;
    end Detruire;
 

@@ -10,11 +10,10 @@ procedure Main is
    package Ada_Strings_Io is new Ada.Text_Io.Bounded_Io (Sb);
    use Ada_Strings_Io;
 
-   Todo_Exception : exception;
-
    type T_Menu is
      (Menu_Principal, Menu_Registre, Menu_Registre_Consultation_Selection,
-      Menu_Registre_Consultation_Personne, Menu_Registre_Ajout,
+      Menu_Registre_Consultation_Personne,
+      Menu_Registre_Consultation_Recherche, Menu_Registre_Ajout,
       Menu_Registre_Modification, Menu_Arbre_Selection,
       Menu_Arbre_Consultation, Menu_Arbre_Ajouter_Relation,
       Menu_Arbre_Supprimer_Relation, Menu_Arbre_Parente, Quitter);
@@ -137,7 +136,7 @@ procedure Main is
          when 1 =>
             Etat.Menu := Menu_Registre_Consultation_Selection;
          when 2 =>
-            raise Todo_Exception;
+            Etat.Menu := Menu_Registre_Consultation_Recherche;
          when 3 =>
             Etat.Menu := Menu_Registre_Ajout;
          when 4 =>
@@ -181,17 +180,15 @@ procedure Main is
       Put (" <");
       Put (Cle, 0);
       Put (">");
-   end;
+   end Afficher_Nom_Usuel;
 
    -- Affiche le menu qui permet de choisir une personne a consulter dans le registre.
    procedure Afficher_Menu_Registre_Consultation_Selection
      (Etat : in out T_Etat)
    is
-      Cle      : Integer;
-      Correct  : Boolean;
+      Cle     : Integer;
+      Correct : Boolean;
    begin
-      Put_Line ("* Consultation du registre *");
-      New_Line;
       Correct := False;
       while not Correct loop
          Put_Line
@@ -212,12 +209,58 @@ procedure Main is
       end if;
    end Afficher_Menu_Registre_Consultation_Selection;
 
+   -- Affiche les résultats de la recherche.
+   procedure Afficher_Resultats (Etat : in out T_Etat; Recherche : in String)
+   is
+      Nombre_Resultats : Integer := 0;
+
+      procedure Tester_Personne (Cle : in Integer; Personne : in T_Personne) is
+      begin
+         if Sb.Index (Personne.Nom_Usuel, Recherche) > 0
+           or else Sb.Index (Personne.Nom_Complet, Recherche) > 0
+         then
+            Nombre_Resultats := Nombre_Resultats + 1;
+            Put (" * ");
+            Put (Personne.Nom_Usuel);
+            Put (" <");
+            Put (Cle, 0);
+            Put (">");
+            New_Line;
+         end if;
+      end Tester_Personne;
+      procedure Rechercher is new Appliquer_Sur_Registre (Tester_Personne);
+   begin
+      Put_Line ("Résultats de la recherche :");
+      Rechercher (Etat.Arbre);
+      if Nombre_Resultats = 0 then
+         Put_Line ("Aucun résultat.");
+         Etat.Menu := Menu_Registre;
+      else
+         Etat.Menu := Menu_Registre_Consultation_Selection;
+      end if;
+      New_Line;
+   end Afficher_Resultats;
+
+   -- Affiche le menu qui permet de rechercher dans le registre.
+   procedure Afficher_Menu_Registre_Consultation_Recherche
+     (Etat : in out T_Etat)
+   is
+      Recherche : Sb.Bounded_String;
+   begin
+      Put_Line ("* Recherche dans le registre *");
+      New_Line;
+      Put ("Nom a rechercher : ");
+      Recherche := Get_Line;
+      New_Line;
+      Afficher_Resultats (Etat, Sb.To_String (Recherche));
+   end Afficher_Menu_Registre_Consultation_Recherche;
+
    -- Affiche le menu des possibilités pour une personne du registre.
    procedure Afficher_Menu_Registre_Consultation_Personne
      (Etat : in out T_Etat)
    is
       Personne : T_Personne;
-      Choix : Integer;
+      Choix    : Integer;
    begin
       Personne := Lire_Registre (Etat.Arbre, Etat.Cle);
       Afficher_Personne (Etat.Cle, Personne);
@@ -316,8 +359,6 @@ procedure Main is
       Skip_Line;
 
       if Choix = 'o' or Choix = 'O' then
-         -- Generer_Cle (Etat.Arbre, Cle);
-         -- Attribuer_Registre (Etat.Arbre, Cle, Personne);
          Ajouter_Personne (Etat.Arbre, Personne, Cle);
          Put ("Personne ajoutée avec la clé : ");
          Put (Cle, 0);
@@ -390,9 +431,11 @@ procedure Main is
    procedure Afficher_Menu_Arbre_Consultation (Etat : in out T_Etat) is
 
       -- Groupe toutes les relations de même étiquette ensemble.
-      procedure Afficher_Relations_Groupees (Etat : in T_Etat; Etiquette : in T_Etiquette_Arete; Titre : in String) is
-         Liste    : T_Liste_Relations;
-         Relation : T_Arete_Etiquetee;
+      procedure Afficher_Relations_Groupees
+        (Etat : in T_Etat; Etiquette : in T_Etiquette_Arete; Titre : in String)
+      is
+         Liste         : T_Liste_Relations;
+         Relation      : T_Arete_Etiquetee;
          Titre_Affiche : Boolean := False;
       begin
          Liste_Relations (Liste, Etat.Arbre, Etat.Cle);
@@ -408,10 +451,10 @@ procedure Main is
                New_Line;
             end if;
          end loop;
-      end;
+      end Afficher_Relations_Groupees;
 
-      Liste    : T_Liste_Relations;
-      Choix    : Integer;
+      Liste : T_Liste_Relations;
+      Choix : Integer;
    begin
       Afficher_Nom_Usuel (Etat, Etat.Cle);
       New_Line;
@@ -567,21 +610,22 @@ procedure Main is
 
       procedure Afficher_Bandeau (Nombre_Generations : in Integer) is
       begin
-         for I in 0..Nombre_Generations loop
+         for I in 0 .. Nombre_Generations loop
             Put (I, 2);
             Put ("  ");
          end loop;
          Put_Line (" génération");
-         for I in 1..(Nombre_Generations*4+15) loop
+         for I in 1 .. (Nombre_Generations * 4 + 15) loop
             Put ("=");
          end loop;
          New_Line;
-      end;
+      end Afficher_Bandeau;
 
       procedure Afficher_Parente
         (Etat : in T_Etat; Cle : in Integer; Etiquette : in T_Etiquette_Arete;
-         Nombre_Generations : in Integer; Indentation : in String) is
-         Liste : T_Liste_Relations;
+         Nombre_Generations : in Integer; Indentation : in String)
+      is
+         Liste    : T_Liste_Relations;
          Relation : T_Arete_Etiquetee;
       begin
          Put (Indentation);
@@ -595,18 +639,21 @@ procedure Main is
          while Liste_Non_Vide (Liste) loop
             Relation_Suivante (Liste, Relation);
             if Relation.Etiquette = Etiquette then
-               Afficher_Parente (Etat, Relation.Destination, Etiquette, Nombre_Generations - 1, Indentation & "    ");
+               Afficher_Parente
+                 (Etat, Relation.Destination, Etiquette,
+                  Nombre_Generations - 1, Indentation & "    ");
             end if;
          end loop;
       end Afficher_Parente;
 
       Nombre_Generations : Integer;
-      Correct : Boolean;
+      Correct            : Boolean;
    begin
       Correct := False;
       while not Correct loop
          begin
-            Put_Line ("Nombre de générations à afficher [> 0 pour les parents,");
+            Put_Line
+              ("Nombre de générations a afficher [> 0 pour les parents,");
             Put ("< 0 pour les enfants, 0 pour retour] : ");
             Get (Nombre_Generations);
             Correct := True;
@@ -619,15 +666,17 @@ procedure Main is
       New_Line;
       if Nombre_Generations > 0 then
          Afficher_Bandeau (Nombre_Generations);
-         Afficher_Parente (Etat, Etat.Cle, A_Pour_Parent, Nombre_Generations, "");
+         Afficher_Parente
+           (Etat, Etat.Cle, A_Pour_Parent, Nombre_Generations, "");
          New_Line;
       elsif Nombre_Generations < 0 then
          Afficher_Bandeau (-Nombre_Generations);
-         Afficher_Parente (Etat, Etat.Cle, A_Pour_Enfant, -Nombre_Generations, "");
+         Afficher_Parente
+           (Etat, Etat.Cle, A_Pour_Enfant, -Nombre_Generations, "");
          New_Line;
       end if;
       Etat.Menu := Menu_Arbre_Consultation;
-   end;
+   end Afficher_Menu_Arbre_Parente;
 
    -- Affiche le menu correspondant a l'état du programme.
    procedure Afficher_Menu (Etat : in out T_Etat) is
@@ -641,6 +690,8 @@ procedure Main is
             Afficher_Menu_Registre_Consultation_Selection (Etat);
          when Menu_Registre_Consultation_Personne =>
             Afficher_Menu_Registre_Consultation_Personne (Etat);
+         when Menu_Registre_Consultation_Recherche =>
+            Afficher_Menu_Registre_Consultation_Recherche (Etat);
          when Menu_Registre_Ajout =>
             Afficher_Menu_Registre_Ajout (Etat);
          when Menu_Registre_Modification =>

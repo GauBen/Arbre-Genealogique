@@ -131,4 +131,10 @@ package body Arbre_Genealogique is
       return Existe (Arbre.Registre, Cle);
    end Existe_Registre;
 
+   procedure Appliquer_Sur_Registre (Arbre : in out T_Arbre_Genealogique) is
+      procedure Appliquer is new Appliquer_Sur_Tous (P);
+   begin
+      Appliquer (Arbre.Registre);
+   end Appliquer_Sur_Registre;
+
 end Arbre_Genealogique;
