@@ -249,10 +249,14 @@ procedure Main is
    begin
       Put_Line ("* Recherche dans le registre *");
       New_Line;
-      Put ("Nom a rechercher : ");
+      Put ("Nom a rechercher [Entrée pour retour] : ");
       Recherche := Get_Line;
       New_Line;
-      Afficher_Resultats (Etat, Sb.To_String (Recherche));
+      if Sb.Length (Recherche) > 0 then
+         Afficher_Resultats (Etat, Sb.To_String (Recherche));
+      else
+         Etat.Menu := Menu_Registre;
+      end if;
    end Afficher_Menu_Registre_Consultation_Recherche;
 
    -- Affiche le menu des possibilités pour une personne du registre.
