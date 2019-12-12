@@ -61,6 +61,12 @@ package Graphe is
      (Graphe : T_Graphe; Etiquette : T_Etiquette_Sommet) return Boolean;
 
    function Est_Vide (Graphe : T_Graphe) return Boolean;
+
+   -- Applique une procédure P sur tous les éléments du registre.
+   generic
+      with procedure P (Cle : in T_Etiquette_Sommet; Liste : in out T_Liste_Adjacence);
+   procedure Appliquer_Sur_Tous_Sommets (Graphe : in T_Graphe);
+
 private
 
    -- Un graphe est représenté par une liste chaînée de sommets

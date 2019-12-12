@@ -16,7 +16,8 @@ procedure Main is
       Menu_Registre_Consultation_Recherche, Menu_Registre_Ajout,
       Menu_Registre_Modification, Menu_Arbre_Selection,
       Menu_Arbre_Consultation, Menu_Arbre_Ajouter_Relation,
-      Menu_Arbre_Supprimer_Relation, Menu_Arbre_Parente, Quitter);
+      Menu_Arbre_Supprimer_Relation, Menu_Arbre_Parente, Menu_Statistiques,
+      Quitter);
 
    type T_Etat is record
       Arbre : T_Arbre_Genealogique;
@@ -104,15 +105,18 @@ procedure Main is
       Put_Line ("Menu principal :");
       Put_Line ("1. Accéder au registre");
       Put_Line ("2. Accéder a un arbre généalogique");
-      Put_Line ("3. Quitter");
+      Put_Line ("3. Statistiques");
+      Put_Line ("4. Quitter");
       New_Line;
-      Choisir (3, Choix);
+      Choisir (4, Choix);
       New_Line;
       case Choix is
          when 1 =>
             Etat.Menu := Menu_Registre;
          when 2 =>
             Etat.Menu := Menu_Arbre_Selection;
+         when 3 =>
+            Etat.Menu := Menu_Statistiques;
          when others =>
             Etat.Menu := Quitter;
       end case;
@@ -610,6 +614,7 @@ procedure Main is
       Etat.Menu := Menu_Arbre_Consultation;
    end Afficher_Menu_Arbre_Supprimer_Relation;
 
+   -- Affiche un arbre de parenté, ascendant ou descendant.
    procedure Afficher_Menu_Arbre_Parente (Etat : in out T_Etat) is
 
       procedure Afficher_Bandeau (Nombre_Generations : in Integer) is
@@ -682,6 +687,71 @@ procedure Main is
       Etat.Menu := Menu_Arbre_Consultation;
    end Afficher_Menu_Arbre_Parente;
 
+   -- Affiche diverses statistiques sur le graphe.
+   procedure Afficher_Menu_Statistiques (Etat : in out T_Etat) is
+
+      Nombre_Personnes : Integer := 0;
+      Nombre_Relations : Integer := 0;
+      Nombre_Orphelins : Integer := 0;
+
+      type Stats_Parents is array (1 .. 4) of Integer;
+      Nombre_Parents_Connus : Stats_Parents := (0, 0, 0, 0);
+
+      procedure P (Cle : in Integer; Liste : in out T_Liste_Relations) is
+         Relation       : T_Arete_Etiquetee;
+         Nombre_Parents : Integer := 0;
+      begin
+         Nombre_Personnes := Nombre_Personnes + 1;
+         if Liste_Non_Vide (Liste) then
+            while Liste_Non_Vide (Liste) loop
+               Nombre_Relations := Nombre_Relations + 1;
+               Relation_Suivante (Liste, Relation);
+               if Relation.Etiquette = A_Pour_Parent then
+                  Nombre_Parents := Nombre_Parents + 1;
+               end if;
+            end loop;
+            if Nombre_Parents > 2 then
+               Nombre_Parents_Connus (4) := Nombre_Parents_Connus (4) + 1;
+            else
+               Nombre_Parents_Connus (Nombre_Parents - 1) :=
+                 Nombre_Parents_Connus (Nombre_Parents - 1) + 1;
+            end if;
+         else
+            Nombre_Orphelins := Nombre_Orphelins + 1;
+            -- On pourrait ici utiliser Afficher_Nom_Usuel (Etat, Cle)
+         end if;
+      end P;
+      procedure Compter is new Appliquer_Sur_Graphe (P);
+   begin
+      Put_Line ("* Statistiques *");
+      New_Line;
+      Compter (Etat.Arbre);
+      Put ("Nombre de personnes enregistrées : ");
+      Put (Nombre_Personnes, 0);
+      New_Line;
+      Put ("Nombre de relations enregistrées : ");
+      Put (Nombre_Relations, 0);
+      New_Line;
+      Put ("Nombre de personnes sans aucune relation : ");
+      Put (Nombre_Orphelins, 0);
+      New_Line;
+      Put_Line ("Nombre de personne avec");
+      Put (" * Aucun parent connu  : ");
+      Put (Nombre_Parents_Connus (1), 0);
+      New_Line;
+      Put (" * Un parent connu     : ");
+      Put (Nombre_Parents_Connus (2), 0);
+      New_Line;
+      Put (" * Deux parents connus : ");
+      Put (Nombre_Parents_Connus (3), 0);
+      New_Line;
+      Put (" * Trois ou plus       : ");
+      Put (Nombre_Parents_Connus (4), 0);
+      New_Line;
+      New_Line;
+      Etat.Menu := Menu_Principal;
+   end Afficher_Menu_Statistiques;
+
    -- Affiche le menu correspondant a l'état du programme.
    procedure Afficher_Menu (Etat : in out T_Etat) is
    begin
@@ -710,6 +780,8 @@ procedure Main is
             Afficher_Menu_Arbre_Supprimer_Relation (Etat);
          when Menu_Arbre_Parente =>
             Afficher_Menu_Arbre_Parente (Etat);
+         when Menu_Statistiques =>
+            Afficher_Menu_Statistiques (Etat);
          when others =>
             Etat.Menu := Quitter;
       end case;

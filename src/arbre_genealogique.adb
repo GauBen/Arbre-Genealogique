@@ -137,4 +137,10 @@ package body Arbre_Genealogique is
       Appliquer (Arbre.Registre);
    end Appliquer_Sur_Registre;
 
+   procedure Appliquer_Sur_Graphe (Arbre : in out T_Arbre_Genealogique) is
+      procedure Appliquer is new Appliquer_Sur_Tous_Sommets (P);
+   begin
+      Appliquer (Arbre.Graphe);
+   end Appliquer_Sur_Graphe;
+
 end Arbre_Genealogique;

@@ -152,4 +152,12 @@ package body Graphe is
       end loop;
    end Supprimer_Arete;
 
+   procedure Appliquer_Sur_Tous_Sommets (Graphe : in T_Graphe) is
+   begin
+      if Graphe /= null then
+         P (Graphe.all.Etiquette, Graphe.all.Arete);
+         Appliquer_Sur_Tous_Sommets (Graphe.all.Suivant);
+      end if;
+   end Appliquer_Sur_Tous_Sommets;
+
 end Graphe;

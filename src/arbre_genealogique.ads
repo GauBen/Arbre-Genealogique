@@ -77,6 +77,10 @@ package Arbre_Genealogique is
       with procedure P (Cle : in Integer; Personne : in T_Personne);
    procedure Appliquer_Sur_Registre (Arbre : in out T_Arbre_Genealogique);
 
+   generic
+      with procedure P (Cle : in Integer; Liste : in out T_Liste_Relations);
+   procedure Appliquer_Sur_Graphe (Arbre : in out T_Arbre_Genealogique);
+
 private
 
    package Registre_Civil is new Registre (100, T_Personne);
