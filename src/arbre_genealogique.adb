@@ -108,6 +108,13 @@ package body Arbre_Genealogique is
             Supprimer_Arete
               (Arbre.Graphe, Personne_Destination, A_Pour_Enfant,
                Personne_Origine);
+         when A_Pour_Enfant =>
+            Supprimer_Arete
+              (Arbre.Graphe, Personne_Origine, A_Pour_Enfant,
+               Personne_Destination);
+            Supprimer_Arete
+              (Arbre.Graphe, Personne_Destination, A_Pour_Parent,
+               Personne_Origine);
          when others =>
             Supprimer_Arete
               (Arbre.Graphe, Personne_Origine, Relation, Personne_Destination);
