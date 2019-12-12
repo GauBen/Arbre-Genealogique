@@ -713,8 +713,8 @@ procedure Main is
             if Nombre_Parents > 2 then
                Nombre_Parents_Connus (4) := Nombre_Parents_Connus (4) + 1;
             else
-               Nombre_Parents_Connus (Nombre_Parents - 1) :=
-                 Nombre_Parents_Connus (Nombre_Parents - 1) + 1;
+               Nombre_Parents_Connus (Nombre_Parents + 1) :=
+                 Nombre_Parents_Connus (Nombre_Parents + 1) + 1;
             end if;
          else
             Nombre_Orphelins := Nombre_Orphelins + 1;
