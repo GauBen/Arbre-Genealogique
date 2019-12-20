@@ -1,8 +1,9 @@
 with Arbre_Genealogique;  use Arbre_Genealogique;
+with Date;                use Date;
 with Ada.Text_Io;         use Ada.Text_Io;
 with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 
-procedure Test_Arbre_Genealogique is
+procedure Scenario_Genealogique is
 
    Arbre     : T_Arbre_Genealogique;
    Personne  : T_Personne;
@@ -18,11 +19,13 @@ begin
 
    Personne :=
      (Sb.To_Bounded_String ("Jean Bon"),
-      Sb.To_Bounded_String ("Jean Bon Blanc"));
+       Sb.To_Bounded_String ("Jean, Eude Bon"), Masculin,
+       Creer_Date (31, 1, 1960), Sb.To_Bounded_String ("Paris, France"));
 
    Personne2 :=
      (Sb.To_Bounded_String ("Kevin Bon"),
-      Sb.To_Bounded_String ("Kevin Bon Chocolat"));
+       Sb.To_Bounded_String ("Kevin, Junior Bon"), Masculin,
+       Creer_Date (1, 4, 1999), Sb.To_Bounded_String ("Toulouse, France"));
 
    Ajouter_Personne (Arbre, Personne, Cle);
    Ajouter_Personne (Arbre, Personne2, Cle2);
@@ -50,9 +53,6 @@ begin
 	   New_Line;
    end loop;
 
-
    Detruire (Arbre);
 
-   Pouet;
-
-end Test_Arbre_Genealogique;
+end Scenario_Genealogique;

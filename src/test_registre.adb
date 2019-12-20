@@ -1,41 +1,62 @@
-with registre;
-with text_io; use text_io;
-with ada.integer_text_io; use ada.integer_text_io;
+with Ada.Text_IO; use Ada.Text_IO;
+with Registre;
 
 procedure Test_Registre is
 
-   package Registre_Test is new registre (20, integer);
+   package Registre_Test is new Registre (100, Integer);
    use Registre_Test;
 
-   mon_reg : t_registre;
+   procedure Test_Initialiser is
+      Registre : T_Registre;
+   begin
+      Initialiser (Registre);
+      pragma Assert (Est_Vide (Registre));
+      Detruire (Registre);
+   end Test_Initialiser;
 
+   procedure Test_Attribuer is
+      Registre : T_Registre;
+   begin
+      Initialiser (Registre);
+      Attribuer (Registre, 1, 1);
+      pragma Assert (Existe (Registre, 1));
+      Detruire (Registre);
+   end Test_Attribuer;
+
+   procedure Test_Acceder is
+      Registre : T_Registre;
+   begin
+      Initialiser (Registre);
+      Attribuer (Registre, 1, 1);
+      pragma Assert (Acceder (Registre, 1) = 1);
+      Detruire (Registre);
+   end Test_Acceder;
+
+   procedure Test_Supprimer is
+      Registre : T_Registre;
+   begin
+      Initialiser (Registre);
+      Attribuer (Registre, 1, 2);
+      Supprimer (Registre, 1);
+      pragma Assert (not Existe (Registre, 1));
+      Detruire (Registre);
+   end Test_Supprimer;
+
+   procedure Test_Detruire is
+      Registre : T_Registre;
+   begin
+      Initialiser (Registre);
+      Attribuer (Registre, 1, 2);
+      Attribuer (Registre, 3, 4);
+      Attribuer (Registre, 2, 5);
+      Detruire (Registre);
+      pragma Assert (Est_Vide (Registre));
+   end Test_Detruire;
 begin
-
-   initialiser(mon_reg);
-   if not existe(mon_reg, 42) then
-      put("ca chemar");
-   end if;
-
-   attribuer(mon_reg, 42, 0);
-   attribuer(mon_reg, 22, 1);
-   attribuer(mon_reg, 42, 2);
-   if existe(mon_reg, 42) then
-      put("ca chemar");
-   end if;
-   if existe(mon_reg, 22) then
-      put("ca chemar");
-   end if;
-
-   put(acceder(mon_reg, 42));
-   put(acceder(mon_reg, 22));
-
-   --Supprimer(mon_reg, 42);
-   --Supprimer(mon_reg, 22);
-
-   if not Est_Vide(mon_reg) then put(" oh "); end if;
-
-   Detruire(mon_reg);
-
-   if Est_Vide(mon_reg) then put("yeah"); end if;
-
+   Test_Initialiser;
+   Test_Acceder;
+   Test_Attribuer;
+   Test_Supprimer;
+   Test_Detruire;
+   Put_Line ("Le module est fonctionnel");
 end Test_Registre;

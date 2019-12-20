@@ -1,67 +1,67 @@
+with Ada.Text_IO; use Ada.Text_IO;
 with Graphe;
-with Ada.Text_Io;         use Ada.Text_Io;
-with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 
 procedure Test_Graphe is
 
-   subtype T_Etiquette_Sommet is Integer;
-   type T_Etiquette_Arete is
-     (A_Pour_Parent, A_Pour_Enfant, A_Pour_Frere, A_Pour_Conjoint);
+   package Graphe_Test is new Graphe (Integer, Integer);
+   use Graphe_Test;
 
-   package Graphe_Genealogique is new Graphe (T_Etiquette_Sommet, T_Etiquette_Arete);
-   use Graphe_Genealogique;
+   procedure Test_Initialiser is
+      Graphe1 : T_Graphe;
+   begin
+      Initialiser (Graphe1);
+      pragma Assert (Est_Vide (Graphe1));
+      Detruire (Graphe1);
+   end Test_Initialiser;
 
-   Graphe1   : T_Graphe;
-   Adjacence : T_Liste_Adjacence;
-   Arete     : T_Arete_Etiquetee;
-   Sommet    : T_Etiquette_Sommet;
+   procedure Test_Ajouter_Sommet is
+      Graphe1 : T_Graphe;
+   begin
+      Initialiser (Graphe1);
+      Ajouter_Sommet (Graphe1, 1);
+      pragma Assert (Indiquer_Sommet_Existe (Graphe1, 1));
+      Detruire (Graphe1);
+   end Test_Ajouter_Sommet;
+
+   procedure Test_Ajouter_Arete is
+      Graphe1 : T_Graphe;
+      Liste   : T_Liste_Adjacence;
+      Arete   : T_Arete_Etiquetee;
+   begin
+      Initialiser (Graphe1);
+      Ajouter_Sommet (Graphe1, 1);
+      Ajouter_Sommet (Graphe1, 42);
+      Ajouter_Arete (Graphe1, 1, 2, 42);
+      Chaine_Adjacence (Liste, Graphe1, 1);
+      Arete_Suivante (Liste, Arete);
+      pragma Assert (Arete.Etiquette = 2);
+      Detruire (Graphe1);
+   end Test_Ajouter_Arete;
+
+   procedure Test_Supprimer_Arete is
+      Liste   : T_Liste_Adjacence;
+      Graphe1 : T_Graphe;
+      Arete   : T_Arete_Etiquetee;
+   begin
+      Initialiser (Graphe1);
+      Ajouter_Sommet (Graphe1, 1);
+      Ajouter_Sommet (Graphe1, 42);
+      Ajouter_Arete (Graphe1, 1, 2, 42);
+      Supprimer_Arete (Graphe1, 1, 2, 42);
+      Chaine_Adjacence (Liste, Graphe1, 1);
+      Arete_Suivante (Liste, Arete);
+   exception  -- Arete_suivante lève une exception si l'arete est vide.
+      when Vide =>
+         Put_Line ("Supprimer_Arete est fonctionnel");
+      when others =>
+         null;
+         Detruire (Graphe1);
+   end Test_Supprimer_Arete;
 
 begin
-
-   Initialiser (Graphe1);
-
-   Ajouter_Sommet (Graphe1, 42);
-   Ajouter_Sommet (Graphe1, 1337);
-   Ajouter_Arete (Graphe1, 42, A_Pour_Parent, 1337);
-   Ajouter_Arete (Graphe1, 1337, A_Pour_Enfant, 42);
-
-   Ajouter_Sommet (Graphe1, 1);
-   Ajouter_Sommet (Graphe1, 2);
-   Ajouter_Sommet (Graphe1, 3);
-   Ajouter_Arete (Graphe1, 42, A_Pour_Parent, 1);
-   Ajouter_Arete (Graphe1, 1, A_Pour_Enfant, 42);
-   Ajouter_Arete (Graphe1, 42, A_Pour_Frere, 2);
-   Ajouter_Arete (Graphe1, 2, A_Pour_Frere, 42);
-   Ajouter_Arete (Graphe1, 42, A_Pour_Conjoint, 3);
-   Ajouter_Arete (Graphe1, 3, A_Pour_Conjoint, 42);
-
-   Sommet := 42;
-   --Get (Sommet);
-   --Skip_Line;
-   Chaine_Adjacence (Adjacence, Graphe1, Sommet);
-
-   while Adjacence_Non_Vide (Adjacence) loop
-      Arete_Suivante (Adjacence, Arete);
-      Put (Sommet, 0);
-      Put (" " & T_Etiquette_Arete'image(Arete.Etiquette) & " ");
-      Put (Arete.Destination, 0);
-      New_Line;
-   end loop;
-   
-   Supprimer_Arete(Graphe1,42,A_Pour_Frere,2);
-   New_Line;
-   Sommet := 42;
-   Chaine_Adjacence(Adjacence,Graphe1,Sommet);
-   while Adjacence_Non_Vide (Adjacence) loop
-	   Arete_Suivante(Adjacence,Arete);
-	   Put(Sommet,0);
-	   Put(" " & T_Etiquette_Arete'image(Arete.Etiquette) & " ");
-	   Put(Arete.Destination,0);
-	   New_Line;
-   end loop;
-
-   Detruire (Graphe1);
-
-   Pouet;
-
+   Test_Initialiser;
+   Test_Ajouter_Sommet;
+   Test_Ajouter_Arete;
+   Test_Supprimer_Arete;
+   Put_Line ("Module fonctionnel");
 end Test_Graphe;

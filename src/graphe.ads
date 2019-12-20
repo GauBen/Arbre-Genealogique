@@ -45,7 +45,7 @@ package Graphe is
      (Adjacence :    out T_Liste_Adjacence; Graphe : in T_Graphe;
       Origine   : in     T_Etiquette_Sommet);
 
-   -- Renvoie vrai si on peut continuer �  itérer.
+   -- Renvoie vrai si on peut continuer à itérer.
    function Adjacence_Non_Vide (Adjacence : T_Liste_Adjacence) return Boolean;
 
    -- Lit l'arête suivante et avance la lecture.

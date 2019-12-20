@@ -23,22 +23,12 @@ package body Graphe is
    procedure Detruire (Graphe : in out T_Graphe) is
    begin
       if Graphe /= null then
+         -- Détruit proprement un sommet
          Detruire_Arete (Graphe.all.Arete);
          Detruire (Graphe.all.Suivant);
       end if;
       Desallouer_Sommet (Graphe);
    end Detruire;
-
-   -- ? Exception lorsque le sommet existe déj�  ?
-   procedure Ajouter_Sommet
-     (Graphe : in out T_Graphe; Etiquette : T_Etiquette_Sommet)
-   is
-      Nouveau_Graphe : T_Graphe;
-   begin
-      Nouveau_Graphe     := new T_Sommet;
-      Nouveau_Graphe.all := (Etiquette, null, Graphe);
-      Graphe             := Nouveau_Graphe;
-   end Ajouter_Sommet;
 
    function Trouver_Pointeur_Sommet
      (Graphe : T_Graphe; Etiquette : T_Etiquette_Sommet) return T_Graphe
@@ -52,6 +42,22 @@ package body Graphe is
          return Trouver_Pointeur_Sommet (Graphe.all.Suivant, Etiquette);
       end if;
    end Trouver_Pointeur_Sommet;
+
+   procedure Ajouter_Sommet
+     (Graphe : in out T_Graphe; Etiquette : T_Etiquette_Sommet)
+   is
+      Nouveau_Graphe : T_Graphe;
+   begin
+      begin
+         -- On ignore l'ajout si une étiquette du même nom existe déjà
+         Nouveau_Graphe := Trouver_Pointeur_Sommet (Graphe, Etiquette);
+      exception
+         when Sommet_Non_Trouve =>
+            Nouveau_Graphe     := new T_Sommet;
+            Nouveau_Graphe.all := (Etiquette, null, Graphe);
+            Graphe             := Nouveau_Graphe;
+      end;
+   end Ajouter_Sommet;
 
    function Indiquer_Sommet_Existe
      (Graphe : T_Graphe; Etiquette : T_Etiquette_Sommet) return Boolean
@@ -129,6 +135,7 @@ package body Graphe is
       if Pointeur_Arete = null then
          return;
       end if;
+      -- Cas où c'est au début de la liste d'adjacence
       if Pointeur_Arete.all.Etiquette = Etiquette_Arete and
         Pointeur_Arete.all.Destination.all.Etiquette = Destination
       then
@@ -137,6 +144,7 @@ package body Graphe is
          Detruire_Arete (A_Detruire);
          return;
       end if;
+      -- Cas général
       while Pointeur_Arete.all.Suivante /= null loop
          if Pointeur_Arete.all.Suivante.all.Etiquette = Etiquette_Arete and
            Pointeur_Arete.all.Suivante.all.Destination.all.Etiquette =
@@ -145,6 +153,7 @@ package body Graphe is
             A_Detruire                  := Pointeur_Arete.all.Suivante;
             Pointeur_Arete.all.Suivante :=
               Pointeur_Arete.all.Suivante.all.Suivante;
+            -- Bien nettoyer la mémoire
             Desallouer_Arete (A_Detruire);
             return;
          end if;

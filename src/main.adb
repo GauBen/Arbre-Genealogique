@@ -7,6 +7,7 @@ with Date;                use Date;
 
 procedure Main is
 
+   -- On utilise des chaines de taille variable
    package Ada_Strings_Io is new Ada.Text_Io.Bounded_Io (Sb);
    use Ada_Strings_Io;
 
@@ -19,6 +20,7 @@ procedure Main is
       Menu_Arbre_Supprimer_Relation, Menu_Arbre_Parente, Menu_Statistiques,
       Quitter);
 
+   -- Etat global du programme
    type T_Etat is record
       Arbre : T_Arbre_Genealogique;
       Cle   : Integer;
@@ -82,6 +84,7 @@ procedure Main is
             Get (Cle);
             Correct := Cle >= 0;
          exception
+            -- Si la valeur entrée n'est pas un entier
             when Ada.Io_Exceptions.Data_Error =>
                Correct := False;
          end;
@@ -447,6 +450,7 @@ procedure Main is
          Titre_Affiche : Boolean := False;
       begin
          Liste_Relations (Liste, Etat.Arbre, Etat.Cle);
+         -- On affiche toutes les relations notées Etiquette
          while Liste_Non_Vide (Liste) loop
             Relation_Suivante (Liste, Relation);
             if Relation.Etiquette = Etiquette then
@@ -544,6 +548,7 @@ procedure Main is
          begin
             case Relation_Lue is
                when 1 =>
+                  -- On vérifie qu'un parent est plus vieux que son enfant
                   if D1_Inf_D2
                       (Personne_Origine.Date_De_Naissance,
                        Personne_Destination.Date_De_Naissance)
@@ -587,7 +592,7 @@ procedure Main is
    begin
       Correct := False;
       while not Correct loop
-         Put_Line ("Entrez la clé de la personne a delier [0 pour retour].");
+         Put_Line ("Entrez la clé de la personne a délier [0 pour retour].");
          Choisir_Cle (Cle_Destination);
          Correct :=
            Cle_Destination = 0
@@ -617,6 +622,9 @@ procedure Main is
    -- Affiche un arbre de parenté, ascendant ou descendant.
    procedure Afficher_Menu_Arbre_Parente (Etat : in out T_Etat) is
 
+      -- Affiche un bandeau
+      -- 0   1   2   génération
+      -- ======================
       procedure Afficher_Bandeau (Nombre_Generations : in Integer) is
       begin
          for I in 0 .. Nombre_Generations loop
@@ -697,6 +705,7 @@ procedure Main is
       type Stats_Parents is array (1 .. 4) of Integer;
       Nombre_Parents_Connus : Stats_Parents := (0, 0, 0, 0);
 
+      -- Parcourt le graphe et compte les détails des personnes
       procedure P (Cle : in Integer; Liste : in out T_Liste_Relations) is
          Relation       : T_Arete_Etiquetee;
          Nombre_Parents : Integer := 0;
@@ -796,6 +805,7 @@ begin
    Initialiser (Etat.Arbre);
    Etat.Menu := Menu_Principal;
 
+   -- Quelques personnes enregistrées pour la démo
    Ajouter_Personne
      (Etat.Arbre,
       (Sb.To_Bounded_String ("Jean Bon"),
